@@ -43,3 +43,5 @@ For copyright reasons, I will not post that here. However, if you read through t
 ![homepage search](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/search-desktop-fullscreen.png)
 
 ![mobile view](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/homepage-mobile-notfullscreen.png)
+
+![video page mobile](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/Screen%20Shot%202020-05-21%20at%2018.30.38-fullpage.png)
