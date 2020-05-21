@@ -36,3 +36,10 @@ Here are the average load times without the above fixes in accordance with Googl
 
 ## Where is the movie database file?
 For copyright reasons, I will not post that here. However, if you read through the code, and pay attention to the notes you should easily found out how simple everything has been set in place to generate your own, If you have questions or issues, please open a ticket and I will get back to you as soon as I can.
+
+## Screenshots
+![homepage desktop](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/homepage-desktop.png)
+
+![homepage search](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/search-desktop-fullscreen.png)
+
+![mobile view](https://github.com/KeanuAaron/CouchPotato/blob/master/screenshots/homepage-mobile-notfullscreen.png)
