@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include '_navbar_alphabet.html' %}
+
+{% if isAlpha == True %}
+<h4 style="padding:15px;">
+  <span style="color:#ffc107;">Searching videos starting with:</span><br>
+  [ {{ letter }} ]
+</h4>
+{% endif %}
+
+{% if search_results %}
+{% if isAlpha == False %}
+<h4 style="padding:15px;">
+  <span style="color:#ffc107;">Searching videos matching:</span><br>
+  [ {{ query_string }} ]
+</h4>
+{% endif %}
+<div class="images" style="display:flex;flex-flow:row wrap;">
+  {% for movie in search_results %}
+    <div class="col-4 col-sm-2" style="padding:0 5px;">
+      <a class="search-movie-link" href="{{ url_for('watch_entity', entity=movie.url_title) }}">
+        <img src="{{ movie.thumbnail }}" style="width:100%;"/>
+        <p class="" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;">{{ movie.name }}</p>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if category_results %}
+<h4 style="padding:15px;">
+  <span style="color:#ffc107;">Searching videos matching:</span><br>
+  [ {{ genre }} ]
+</h4>
+<div class="images" id="category-all-container" style="display:flex;flex-flow:row wrap;">
+  {% for movie in category_results %}
+    <div class="col-4 col-sm-2" style="padding:0 5px;">
+      <a class="search-movie-link" href="{{ url_for('watch_entity', entity=movie.url_title) }}">
+        <img src="{{ movie.thumbnail }}" style="width:100%;"/>
+        <p class="" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;">{{ movie.name }}</p>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+<div id="load-more-div" style="display:flex;justify-content:center;padding:0 50px;margin:20px 0 50px;">
+  {% if none_left == False %}
+    <button class="btn btn-warning" id="load-more-from-category" type="button" style="width:100%;">Load More</button>
+  {% endif %}
+</div>
+{% endif %}
+{% if error %}
+<div style="display:flex;justify-content:center;align-content:center;">
+  <h3 style="background-color:red;color:#fff;">{{ error }}</h3>
+</div>
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script>
+	/*
+	Below describes the functionality to load more entities in the /search page
+	*/
+  last_index = 42;
+  $("#load-more-from-category").on('click', function() {
+    if ('{{ isAlpha }}' == 'True') {
+      $.ajax({
+        url: "/load-more-alphabet/{{ letter }}%3Findex%3D" +last_index,
+        type: 'GET',
+        dataType: 'JSON',
+        success:function(response) {
+          console.log(response.length);
+          console.log(response);
+          if (response == 'None Left') {
+            loadButtonDiv = document.getElementById('load-more-div');
+            loadButtonDiv.removeChild(loadButtonDiv.children[0]);
+            loadButtonDiv.innerHTML = '<h4 style="width:100%;color:#ffc107;text-align:center;">Hmm. Seems you reached the end. For now...</h4>';
+            return;
+          }
+          for (var i = 0; i < response.length; i++) {
+            var entity_url = response[i]['entity_url'];
+            var entity_name = response[i]['entity_name'];
+            var entity_thumbnail = response[i]['entity_thumbnail'];
+            console.log('Original Index: ' + last_index);
+            last_index = response[i]['last_index'];
+            console.log('New Index:' + last_index);
+
+            $('#category-all-container').append(`
+              <div class="col-4 col-sm-2" style="padding:0 5px;">
+                <a class="search-movie-link" href="/entity/${entity_url}">
+                  <img src="${entity_thumbnail}" style="width:100%;"/>
+                  <p class="" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;">${entity_name}</p>
+                </a>
+              </div>
+            `);
+          }
+        }
+      });
+      return;
+    }
+    $.ajax({
+      url: "/load-more-category/{{ entity_type }}/{{ genre }}%3Findex%3D" +last_index,
+      type: 'GET',
+      dataType: 'JSON',
+      success:function(response) {
+        console.log(response.length);
+        console.log(response);
+        if (response == 'None Left') {
+          loadButtonDiv = document.getElementById('load-more-div');
+          loadButtonDiv.removeChild(loadButtonDiv.children[0]);
+          loadButtonDiv.innerHTML = '<h4 style="width:100%;color:#ffc107;text-align:center;">Hmm. Seems you reached the end. For now...</h4>';
+          return;
+        }
+        for (var i = 0; i < response.length; i++) {
+          var entity_url = response[i]['entity_url'];
+          var entity_name = response[i]['entity_name'];
+          var entity_thumbnail = response[i]['entity_thumbnail'];
+          console.log('Original Index: ' + last_index);
+          last_index = response[i]['last_index'];
+          console.log('New Index:' + last_index);
+
+          $('#category-all-container').append(`
+            <div class="col-4 col-sm-2" style="padding:0 5px;">
+              <a class="search-movie-link" href="/entity/${entity_url}">
+                <img src="${entity_thumbnail}" style="width:100%;"/>
+                <p class="" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;">${entity_name}</p>
+              </a>
+            </div>
+          `);
+        }
+      }
+    });
+  });
+</script>
+
+{% endblock %}

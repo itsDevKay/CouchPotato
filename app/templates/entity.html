@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.addthis_toolbox.addthis_default_style {
+	display: flex;
+	flex-direction: column;
+}
+.at300b.at-tjin-btn {
+	padding: 15px 100px;
+	border-radius: 3px;
+}
+.at300b.at-tjin-btn {
+	background: #28c101;
+}
+.at300b.at-tjin-btn:first-child {
+	background: #0070ba;
+}
+</style>
+
+<!-- OVERLAY TOP LEVEL DIV CONTROLS-->
+<div class="overlay-top-controls">
+  <div class="left-back-arrow col-6">
+    <h5>
+      <h5>
+        <i onclick="window.history.go(-1); return false;" style="cursor:pointer;" class="fas fa-arrow-left"></i>
+      </h5>
+    </h5>
+  </div>
+  <div class="bookmark-video col-6">
+    <h5>
+      <i onclick="window.location.href='/'" style="cursor:pointer;" class="fas fa-home"></i>
+    </h5>
+  </div>
+</div>
+
+<!--
+I USED SANDBOXING FOR THE IFRAMES IN ORDER TO DENY POP UP ADS. SOME ADS ARE STILL SHOWN BECAUSE OF SCRIPTS EMBEDDED WITH THE SOURCE VIDEO.
+I REALLY CAN'T DO ANYTHING ABOUT THAT BECAUSE IF I DONT ALLOW SCRIPTS THROUGH MY SANBOX THEN THE USER WOULD NEVER BE ABLE TO PRESS PLAY AND
+YOU'D JUST HAVE A REALLY NICE BLACK BOX WITH AN UNTOUCHABLE PLAY BUTTON. SO UNFORTUNATELY, THIS ISN'T A FULLY AD FREE EXPERIENCE. BUT STILL PRETTY DAMN CLOSE!
+-->
+
+{% for video in results.videos %}
+  {% if tvShow == False %}
+    <div class="entity-frame-container embed-response embed-responsive-16by9" style="text-align:center;">
+      <iframe class="entity-video embed-response-item" style="width:100%;height:60vw;" src="{{video.video_src}}" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen></iframe>
+      <h3 class="container-fluid" id="tv-show-episode-playing" style="margin-bottom:30px;">Playing {{ video.title }}</h3>
+    </div>
+    <div class="col-12" style="display:flex; flex-direction:row;margin-bottom:20px;">
+      {% if bug_reported == None %}
+        <button type="button" class="btn btn-danger col-5" data-toggle="modal" data-target="#submit-bug-modal">Report Issue</button>
+      {% elif bug_reported == 'Your reported issue has been sent to our administrator. We will look into this immediately. Thanks!' %}
+        <button type="button" class="btn btn-danger col-5" data-toggle="modal" data-target="#submit-bug-modal" disabled>{{ bug_reported }}</button>
+      {% endif %}
+      <button type="button" class="btn btn-warning col-5 offset-2" data-toggle="modal" data-target="#tip-jar-modal" id="buy-us-a-coffee">Send Us A Tip</button>
+    </div>
+    <div class="col-12" style="display:flex; flex-direction:row;justify-content:center;">
+      Like this page? Share us with your friends!
+    </div>
+    <div class="col-12" style="display:flex; flex-direction:row;margin-bottom:20px;justify-content:center;">
+      <div class="addthis_inline_share_toolbox"></div>
+    </div>
+
+    <p class="container-fluid"><strong style="color:#ffc107;">Duration: </strong>{{ results.videos[0].duration }}</p>
+    <p class="container-fluid"><strong style="color:#ffc107;">Rating: </strong>{{ results.videos[0].rating }}</p>
+    <p class="container-fluid"><strong style="color:#ffc107;">Synopsis: </strong>{{ results.videos[0].description }}</p>
+  {% endif %}
+{% endfor %}
+
+{% if tvShow %}
+  <div class="entity-frame-container embed-response embed-responsive-16by9" style="text-align:center;">
+    <iframe class="entity-video embed-response-item" style="width:100%;height:35vh;position:relative;margin-bottom:10px;" src="{{ getFirstVideo(results.id).video_src }}" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen></iframe>
+    <h3 class="container-fluid" id="tv-show-episode-playing" style="margin-bottom:30px;">Playing {{ results.name }} - Season {{ getFirstVideo(results.id).season }} Episode {{ getFirstVideo(results.id).season }}</h3>
+  </div>
+  <div class="col-12" style="display:flex; flex-direction:row;margin-bottom:20px;">
+		{% if bug_reported == None %}
+			<button type="button" class="btn btn-danger col-5" data-toggle="modal" data-target="#submit-bug-modal">Report Issue</button>
+		{% elif bug_reported == 'Your reported issue has been sent to our administrator. We will look into this immediately. Thanks!' %}
+			<button type="button" class="btn btn-danger col-5" data-toggle="modal" data-target="#submit-bug-modal" disabled>{{ bug_reported }}</button>
+		{% endif %}
+    <button type="button" class="btn btn-warning col-5 offset-2" data-toggle="modal" data-target="#tip-jar-modal" id="buy-us-a-coffee">Buy Us A Coffee</button>
+  </div>
+	<div class="col-12" style="display:flex; flex-direction:row;justify-content:center;">
+    Like this page? Share us with your friends!
+  </div>
+  <div class="col-12" style="display:flex; flex-direction:row;margin-bottom:20px;justify-content:center;">
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+  <p class="container-fluid"><strong style="color:#ffc107;">Duration: </strong>{{ results.videos[0].duration }}</p>
+  <p class="container-fluid"><strong style="color:#ffc107;">Rating: </strong>{{ results.videos[0].rating }}</p>
+  <p class="container-fluid"><strong style="color:#ffc107;">Synopsis: </strong>{{ results.videos[0].description }}</p>
+
+  {% set totalSeasons = getTotalSeasons(results.videos) %}
+  {% for season in range(totalSeasons) %}
+    <div class="season-episode-container" id="season-{{ season+1 }}">
+      <h4 class="container-fluid season">Season {{ season+1 }}</h4>
+
+      <div class="custom-menu-wrapper hide-back" id="alpha-search">
+        <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+          <div class="custom-menu-screen"></div>
+          <ul class="pure-menu-list">
+            {% for episode in getSeasonEpisodes(season+1, results.id) | reverse %}
+            <li class="pure-menu-item">
+              <a class="pure-menu-link season-episodes" data-episode-title='{{ episode.title }}' data-video-src='{{ episode.video_src }}' href="#">
+                <div class="image-div" style="width:110px;">
+                  <img width="130" height="191" src="{{ results.thumbnail }}"/>
+                  <p>episode {{ episode.episode }}</p>
+                </div>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+        scroll sideways to view more &rarr;
+      </p>
+    </div>
+  {% endfor %}
+{% endif %}
+<p class="soft-warning" style="font-size: 0.8rem;text-align: center;color: rgba(167,164,164, 0.72);">
+  None of the movies are hosted on this website, instead video sources are referenced from other movie websites, minus the pop up advertising. Some of these video sources have embedded advertisement interruptions. I apologize for this inconvenience and plan to solve this as soon as possible.
+</p>
+<div class="custom-menu-wrapper hide-back container-fluid" id="related-entities-search">
+  <h4>You May Also Like</h4>
+  <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+    <div class="custom-menu-screen"></div>
+    <ul class="pure-menu-list">
+      {% for item in getRelatedEntities(results.category_id) %}
+      <li class="pure-menu-item">
+        <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=item.url_title) }}">
+          <div class="image-div image-div-related-entities">
+            <div class="image-overlay-container">
+              <div class="image-overlay">
+                {% if item.isMovie == 0 %}
+                  <div class="episode-circle"></div>
+                  <p>
+                    {{ item.eps }}
+                    <br>
+                    EPS
+                  </p>
+                {% endif %}
+              </div>
+              <img src="{{ item.thumbnail }}" width="130" height="191"/>
+            </div>
+            <p>{{ item.name }}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+  scroll sideways to view more &rarr;
+</p>
+
+<!-- Modal -->
+<div class="modal fade" id="submit-bug-modal" tabindex="-1" role="dialog" aria-labelledby="submitBugModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="submitBugModalTitle" style="color:#333;">Found an issue? Let us know!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('watch_entity', entity=results.url_title, bug_reported='True') }}" method="POST">
+          <div class="form-group">
+            <label for="exampleFormControlInput1" style="color:#333;">Email address (optional)</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" name="exampleFormControlInput1" placeholder="walter.H.white@crystalblue.com">
+            <p class="soft-warning" style="font-size: 0.8rem;text-align: center;color: rgba(167,164,164, 0.72);">
+              Your information will never be stored or abused. This is to email you once issue has been fixed for your viewing pleasure.
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1" style="color:#333;">Please describe what the issue is. Be as specific as possible.</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="exampleFormControlTextarea1" rows="3" required></textarea>
+          </div>
+          <button type="submit" id="submitIssue" class="btn btn-success">Submit Issue</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tip Jar Modal -->
+<div class="modal fade" id="tip-jar-modal" tabindex="-1" role="dialog" aria-labelledby="tipJarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tipJarModalTitle" style="color:#333;">Like this website? Send us a tip :D</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+				<div class="col-12" style="display:flex; flex-direction:row;margin-bottom:20px;justify-content:center;">
+					<div class="addthis_tipjar_inline"></div>
+				</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if tvShow == True %}
+<script>
+	/*
+	==============================================================================
+	You might notice that this `setInterval` function runs twice.
+
+	THIS IS EXTREMELY NECESSARY TO PROPERLY WORK.
+
+	I don't know why I can't run it twice, but without running twice it will leave us
+	with empty seasons.
+
+	See upon harvest, I found that not ever season was available for scraping.
+	An entity could have seasons 1, 2, 7, 8. and not have the missing ones. Because
+	of our jinja2 function that gets the total season. we run a for loop inside
+	a jinja variable to load sections for every season starting at 1 to whatever
+	season number is return to us from `getTotalSeasons` in the `__init__.py`
+
+	These setInterval functions check for div containers that are empty and
+	delete them from the page so we are filling it with useless and redundant areas
+	that don't need to be there.
+	*/
+  var checkForElement = setInterval(function() {
+    var eps = document.getElementsByClassName('season-episode-container');
+    if (document.body.contains(eps[0].children[1].children[0].children[1])) {
+      clearInterval(checkForElement);
+      for (var i=0; i<eps.length; i++) {
+        if (eps[i].children[1].children[0].children[1].children.length == 0) {
+          var emptySeason = eps[i].id;
+          console.log(emptySeason);
+          var deleteMe = document.getElementById(emptySeason);
+          deleteMe.parentNode.removeChild(deleteMe);
+        }
+      }
+    } else { console.log('looking for element'); }
+  });
+
+  var checkForElement = setInterval(function() {
+    var eps = document.getElementsByClassName('season-episode-container');
+    if (document.body.contains(eps[0].children[1].children[0].children[1])) {
+      clearInterval(checkForElement);
+      for (var i=0; i<eps.length; i++) {
+        if (eps[i].children[1].children[0].children[1].children.length == 0) {
+          var emptySeason = eps[i].id;
+          console.log(emptySeason);
+          var deleteMe = document.getElementById(emptySeason);
+          deleteMe.parentNode.removeChild(deleteMe);
+        }
+      }
+    } else { console.log('looking for element'); }
+  });
+	/*
+	==============================================================================
+	*/
+
+  var episodes = document.getElementsByClassName('season-episodes');
+  for (var i=0; i<episodes.length; i++) {
+    episodes[i].addEventListener('click', function() {
+      var episode_video_src  = (this.getAttribute('data-video-src'));
+      var episode_title_text = (this.getAttribute('data-episode-title'));
+      document.getElementsByClassName('entity-video')[0].src = episode_video_src;
+      document.getElementById('tv-show-episode-playing').innerText = episode_title_text;
+    });
+  }
+</script>
+{% endif %}
+<script>
+	/*
+	==============================================================================
+	This issue needs to be ran twice for the same reason as the setInterval.
+
+	This purpose is to correct and stop the text under the related entities from
+	expanding past the width of the image poster. Without this, we lose the structure
+	that makes it consistent, which would turn it in random widths making it look,
+	in my opinion, stupid and un-user friendly.
+	*/
+  var elCheck = document.getElementsByClassName('image-div-related-entities');
+  if (document.body.contains(elCheck[0].children[0].children[1])) {
+    //console.log('\n\nfound element\n\n');
+    clearInterval(checkForElement);
+    var el = document.getElementsByClassName('image-div-related-entities');
+    for (var i=0; i < el.length; i++) {
+      var newWidth = el[i].children[0].children[1].offsetWidth;
+      el[i].style.width = (newWidth-20) + 'px';
+      console.log(el[i].style.width);
+    }
+  } else { console.log('looking for element'); }
+  var checkForElement = setInterval(function() {
+    var elCheck = document.getElementsByClassName('image-div-related-entities');
+    if (document.body.contains(elCheck[0].children[0].children[1])) {
+      //console.log('\n\nfound element\n\n');
+      clearInterval(checkForElement);
+      var el = document.getElementsByClassName('image-div-related-entities');
+      for (var i=0; i < el.length; i++) {
+        var newWidth = el[i].children[0].children[1].offsetWidth;
+        el[i].style.width = (newWidth-20) + 'px';
+        console.log(el[i].style.width);
+      }
+    } else { console.log('looking for element'); }
+  });
+
+	var donateTip = document.getElementById('buy-us-a-coffee');
+	donateTip.addEventListener('click', function() {
+		var donateTitle = document.getElementsByClassName('at-tjin-title')[0];
+		donateTitle.parentNode.removeChild(donateTitle);
+	});
+</script>
+
+
+{% endblock %}

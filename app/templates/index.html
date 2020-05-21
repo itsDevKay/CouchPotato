@@ -1,0 +1,789 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include '_navbar_alphabet.html' %}
+<style>
+	/*
+	These are the style methods for the select box for the random movie generator.
+	*/
+  .custom-select-wrapper {
+       position: relative;
+       user-select: none;
+       width: 100%;
+  }
+   .custom-select {
+       position: relative;
+       display: flex;
+       flex-direction: column;
+       border-width: 0 2px 0 2px;
+       border-style: solid;
+       border-color: #ffc107;
+  }
+   .custom-select__trigger {
+       position: relative;
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       padding: 0 22px;
+       font-size: 20px;
+       font-weight: 300;
+       color: #333;
+       height: 60px;
+       line-height: 60px;
+       background: #ffffff;
+       cursor: pointer;
+       border-width: 2px 0 2px 0;
+       border-style: solid;
+       border-color: #ffc107;
+  }
+   .custom-options {
+       position: absolute;
+       display: block;
+       top: 100%;
+       left: 0;
+       right: 0;
+       border: 2px solid #ffc107;
+       border-top: 0;
+       background: #fff;
+       transition: all 0.5s;
+       opacity: 0;
+       visibility: hidden;
+       pointer-events: none;
+       z-index: 2;
+  }
+   .custom-select.open .custom-options {
+       opacity: 1;
+       visibility: visible;
+       pointer-events: all;
+  }
+   .custom-option {
+       position: relative;
+       display: block;
+       padding: 0 22px 0 22px;
+       font-size: 22px;
+       font-weight: 300;
+       color: #333;
+       line-height: 60px;
+       cursor: pointer;
+       transition: all 0.5s;
+  }
+   .custom-option:hover {
+       cursor: pointer;
+       background-color: #333;
+       color:#fff;
+  }
+   .custom-option.selected {
+       color: #ffffff;
+       background-color: #ffc107;
+  }
+
+.arrow {
+     position: relative;
+     height: 15px;
+     width: 15px;
+}
+ .arrow::before, .arrow::after {
+     content: "";
+     position: absolute;
+     bottom: 0px;
+     width: 0.15rem;
+     height: 100%;
+     transition: all 0.5s;
+}
+ .arrow::before {
+     left: -5px;
+     transform: rotate(45deg);
+     background-color: #394a6d;
+}
+ .arrow::after {
+     left: 5px;
+     transform: rotate(-45deg);
+     background-color: #394a6d;
+}
+ .open .arrow::before {
+     left: -5px;
+     transform: rotate(-45deg);
+}
+ .open .arrow::after {
+     left: 5px;
+     transform: rotate(45deg);
+}
+  </style>
+
+<p class="soft-warning" style="font-size: 0.8rem;text-align: center;color: rgba(167,164,164, 0.72);">
+  Attention Google Chrome users! Video's are being blocked through Google Chrome because I refuse to bombard you with POP-UP advertisements! Please switch to a different browser. (Safari, Firefox, etc.)
+</p>
+
+<!-- SCIFI CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Science Fiction</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='sci-fi') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set scifi = getFilmsByGenre('SCI-FI', entity_type="all") %}
+        {% for index in range(scifi[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=scifi[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if scifi[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ scifi[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ scifi[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ scifi[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- FANTASY CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Fantasy</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='fantasy') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set fantasy = getFilmsByGenre('FANTASY', entity_type="all") %}
+        {% for index in range(fantasy[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=fantasy[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if fantasy[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ fantasy[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ fantasy[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ fantasy[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- ACTION CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Action</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='action') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-action-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set action = getFilmsByGenre('ACTION', entity_type="all") %}
+        {% for index in range(action[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=action[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if action[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ action[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ action[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ action[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- MOVIES OR TV SHOWS ONLY -->
+<section class="entity-type-selection container-fluid">
+  <div class="entity-type-container col-md-5 col-sm-12">
+    <div class="type-selection-container">
+      <div class="type-selection-overlay" style="width:100%;">
+        <div class="headline-container">
+          <h2 class="movies-or-tv"><a href="{{ url_for('tvShowsOnly') }}" style="color:#fff;text-decoration:none;text-align:center;">Tv Shows</a></h2>
+        </div>
+        <img src="{{ url_for('static', filename='images/tv.jpg') }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-sm-12">
+    <h2 id="or">
+      - OR -
+    </h2>
+  </div>
+
+  <div class="entity-type-container col-md-5 col-sm-12">
+    <div class="type-selection-container">
+      <div class="type-selection-overlay" style="width:100%;">
+        <div class="headline-container">
+          <h2 class="movies-or-tv"><a href="{{ url_for('moviesOnly') }}" style="color:#fff;text-decoration:none;text-align:center;">Movies</a></h2>
+        </div>
+        <img src="{{ url_for('static', filename='images/movies.jpg') }}">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTION CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Comedy</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='comedy') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-action-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set comedy = getFilmsByGenre('COMEDY', entity_type="all") %}
+        {% for index in range(comedy[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=comedy[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if comedy[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ comedy[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ comedy[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ comedy[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- ADVENTURE CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Adventure</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='adventure') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-adventure-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set adventure = getFilmsByGenre('ADVENTURE', entity_type="all") %}
+        {% for index in range(adventure[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=adventure[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if adventure[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ adventure[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ adventure[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ adventure[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- HORROR CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Horror</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='horror') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set horror = getFilmsByGenre('HORROR', entity_type="all") %}
+        {% for index in range(horror[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=horror[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if horror[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ horror[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ horror[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ horror[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- RANDOM MOVIE SELECTION -->
+<section style="margin:30px 0;" >
+  <div class="random-movie-container" style="margin: 0 20px;padding: 10px 0px;box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+    <div id="select-random-title" class="col-12" style="display:flex;flex-direction:column;text-align:center;">
+      <h4 style="color:#ffc107;">Can't choose a movie or show? Let us help you!</h4>
+      <p class="" style="opacity:0.6;">Choose a category and click "Surprise Me!". We have over 10,000 movies to choose from.</p>
+    </div>
+    <div class="genre-all-random-select" style="display:flex;flex-direction:column;justify-content:center;padding: 0;">
+      <div class="custom-select-wrapper col-12">
+          <div class="custom-select" style="background:none; border:none;">
+              <div class="custom-select__trigger"><span id="chosen-category">Choose Category</span>
+                  <div class="arrow"></div>
+              </div>
+              <div class="custom-options" style="box-shadow: 0 2px 6px rgba(0,0,0,0.4);position:absolute;margin: 25px 20px;display: flex;flex-direction: column;justify-content: center;margin-left: 11px;margin-right: 27px;" hidden>
+                  <span class="custom-option selected" data-value="All Categories">Choose Category</span>
+                    <span class="custom-option" data-value="All Categories">All Categories</span>
+                  {% for genre in all_categories %}
+                    <span class="custom-option" data-value="{{ genre }}">{{ genre }}</span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+      <div style="padding: 0 20px;">
+          <button type="button" id="random-activation" class="btn btn-warning col-12" style="padding:15px;margin:50px 0;">Surprise Me!</button>
+      </div>
+      <div id="random-choice-made" class="col-12" style="display:flex;justify-content:center;"></div>
+      <div id="random-choice-made-description"></div>
+    </div>
+</section>
+
+<!-- DRAMA CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Drama</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='drama') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set drama = getFilmsByGenre('DRAMA', entity_type="all") %}
+        {% for index in range(drama[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=drama[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if drama[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ drama[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ drama[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ drama[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- ROMANCE CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Romance</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='romance') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set romance = getFilmsByGenre('ROMANCE', entity_type="all") %}
+        {% for index in range(romance[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=romance[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if romance[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ romance[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ romance[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ romance[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- BIOGRAPHY CATEGORY -->
+<section class="entity-selection">
+  <div class="category-section-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-7 category-label">
+          <p class="category-title">Biography</p>
+        </div>
+
+        <div class="col-5 see-all-container-btn">
+          <p class="category-see-more"><a class="see-all-button" href="{{ url_for('categories', entity_type='all', category='biography') }}">See All</a></p>
+        </div>
+      </div>
+  </div>
+
+  <div class="custom-menu-wrapper hide-back" id="category-horror-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+      <div class="custom-menu-screen"></div>
+      <ul class="pure-menu-list">
+        {% set biography = getFilmsByGenre('BIOGRAPHY', entity_type="all") %}
+        {% for index in range(biography[1]) %}
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="{{ url_for('watch_entity', entity=biography[0][index].url_title) }}">
+            <div class="image-div">
+              <div class="image-overlay-container">
+                <div class="image-overlay">
+                  {% if biography[0][index].isMovie == 0 %}
+                    <div class="episode-circle"></div>
+                    <p>
+                      {{ biography[0][index].eps }}
+                      <br>
+                      EPS
+                    </p>
+                  {% endif %}
+                </div>
+                <img src="{{ biography[0][index].thumbnail }}" width="130" height="191"/>
+              </div>
+              <p>{{ biography[0][index].name }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <p class="soft-warning" style="padding:5px 0;color:#fff; font-size:0.8rem;text-align:center;color:rgba(167,164,164,0.72);">
+    scroll sideways to view more &rarr;
+  </p>
+</section>
+
+<!-- CATEGORY IMAGES -->
+<section>
+  <div class="category-container" style="display:flex;flex-flow:row wrap;padding: 0 10px;">
+
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='animation') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/animation.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Animation</h4>
+    </div>
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='comedy') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/comedy.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Comedy</h4>
+    </div>
+
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='documentary') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/documentary.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Documentary</h4>
+    </div>
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='musical') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/musical.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Musical</h4>
+    </div>
+
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='family') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/family.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Family</h4>
+    </div>
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='mystery') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/mystery.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Mystery</h4>
+    </div>
+
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='crime') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/crime.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Crime</h4>
+    </div>
+    <div onclick="window.location.href=`{{ url_for('categories', entity_type='all', category='thriller') }}`;" style="cursor: pointer;margin: 5px 0;width: 100%;z-index: 5;display: flex;justify-content: center;background-image: url('/static/images/thriller.jpg');background-repeat: no-repeat;background-size: cover;background-position: center center;padding: 0;" class="text col-sm-6 col-12">
+      <h4 style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);font-size:3rem;font-family: 'Raleway', sans-serif;padding: 100px 0;background-color: rgba(0,0,0,0.35);height: 100%;width: 100%;margin: 0;display: flex;justify-content: center;">Thriller</h4>
+    </div>
+
+  </div>
+</section>
+
+
+<!--
+  TV          [ √ ]
+  COMEDY      [ √ ]
+  DRAMA       [ √ ]
+  MUSICAL     [ √ ]
+  CRIME       [ √ ]
+  BIOGRAPHY   [ √ ]
+  DOCUMENTARY [ √ ]
+  FAMILY      [ √ ]
+  THRILLER    [ √ ]
+  MYSTERY     [ √ ]
+  ANIMATION   [ √ ]
+  ROMANCE     [ √ ]
+-->
+
+<script>
+	/*
+	This method is defined as to make sure that there is consistency with the
+	widths of the text and poster images. We want to make sure that the title text
+	under the poster images are cut off at the width of the posters.
+	*/
+  var checkForElement = setInterval(function() { //image-div-related-entities
+    var elCheck = document.getElementsByClassName('image-div');
+    if (document.body.contains(elCheck[0].children[0].children[1])) {
+      //console.log('\n\nfound element\n\n');
+      clearInterval(checkForElement);
+      var el = document.getElementsByClassName('image-div');
+      for (var i=0; i < el.length; i++) {
+        var newWidth = el[i].children[0].children[1].offsetWidth;
+        el[i].style.width = (newWidth-20) + 'px';
+        console.log(el[i].style.width);
+      }
+    } else { console.log('looking for element'); }
+  }, 1000);
+
+	/*
+	Below you will find the ajax functionality for the random entity generator
+	*/
+  var getRandomEntity = document.getElementById('random-activation');
+  getRandomEntity.addEventListener('click', function() {
+    var chosenCategory = document.getElementById('chosen-category').innerText;
+    $.ajax({
+      url: "/get-random-item/" +chosenCategory,
+      type: 'GET',
+      dataType: 'JSON',
+      success:function(response) {
+        console.log(response);
+        var entity_url = response['url_title'];
+        var entity_name = response['entity_name'];
+        var entity_thumbnail = response['thumbnail'];
+        var entity_description = response['entity_desc'];
+        var entity_duration = response['entity_duration'];
+        var entity_rating = response['entity_rating'];
+
+        var randomElementEntity = document.getElementById('random-choice-made');
+        var randomDescription = document.getElementById('random-choice-made-description');
+        if (randomElementEntity.children[0]) {
+          randomElementEntity.removeChild(randomElementEntity.children[1]);
+          randomElementEntity.removeChild(randomElementEntity.children[0]);
+          randomDescription.removeChild(randomDescription.children[0]);
+        }
+        $('#random-choice-made').append(`
+            <div class="col-7 col-sm-2" style="padding:0 5px;">
+              <a class="search-movie-link" href="/entity/${entity_url}">
+                <img src="${entity_thumbnail}" style="width:100%;"/>
+                <p class="" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;">${entity_name}</p>
+              </a>
+            </div>
+            <div class="col-5 col-sm-7" style="padding:0 5px;" onclick="window.location.href='/entity/${entity_url}';">
+              <p class="container-fluid"><strong style="color:#ffc107;">Duration: </strong>${entity_duration}</p>
+              <p class="container-fluid"><strong style="color:#ffc107;">Rating: </strong>${entity_rating}</p>
+            </div>
+        `);
+        $('#random-choice-made-description').append(`
+            <div id="random-choice-description" class="col-12" style="display:flex;justify-content:center;" onclick="window.location.href='/entity/${entity_url}';">
+              <p class="container-fluid"><strong style="color:#ffc107;">Synopsis: </strong>${entity_description}</p>
+            </div>
+        `);
+        return;
+      }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+	/*
+	This is our javascript method to make the select box work as it does. This method
+	defines the front end of the select box, not the back end functionality that
+	generates the random entity.
+	*/
+isSelectBoxOpen = false;
+document.querySelector('.custom-select-wrapper').addEventListener('click', function() {
+  this.querySelector('.custom-select').classList.toggle('open');
+  if (isSelectBoxOpen) {
+    document.getElementsByClassName('custom-options')[0].hidden = true;
+    isSelectBoxOpen = false;
+  } else {
+    document.getElementsByClassName('custom-options')[0].hidden = false;
+    isSelectBoxOpen = true;
+  }
+});
+
+
+for (const option of document.querySelectorAll(".custom-option")) {
+    option.addEventListener('click', function() {
+        if (!this.classList.contains('selected')) {
+            this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
+            this.classList.add('selected');
+            document.getElementsByClassName('custom-options')[0].hidden = false;
+            this.closest('.custom-select').querySelector('.custom-select__trigger span').textContent = this.textContent;
+        }
+    })
+}
+
+window.addEventListener('click', function(e) {
+    const select = document.querySelector('.custom-select')
+    if (!select.contains(e.target)) {
+        select.classList.remove('open');
+        document.getElementsByClassName('custom-options')[0].hidden = true;
+    }
+});
+
+</script>
+
+
+{% endblock %}

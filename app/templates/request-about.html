@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include '_navbar_alphabet.html' %}
+
+{% if request_page == True %}
+{% if didSubmit == True %}
+	<div class="container-fluid" style="display: flex;justify-content: center;">
+		<h4 style="color:#ffc107;tex-align:center;">Successfully sent movie request! You'll hear from us soon!</h4>
+	</div>
+{% endif %}
+<div class="container-fluid" style="display: flex;justify-content: center;margin:50px 0;">
+	<div style="box-shadow: 0 2px 10px rgba(0,0,0,0.4);padding: 30px;background:#454545;" class="form-container-div col-12 col-sm-6">
+		<h4 style="color:#ffc107;tex-align:center;">Can't find your favorite shows and movies?</h4>
+		<p>Let us know what you want to see on CouchPotato. We want to make sure you get to see your all time favorites!</p>
+		<hr>
+		<form action="" method="POST">
+			<div class="form-group">
+				<label for="exampleFormControlInput1" style="color:#fff;">Email address (optional)</label>
+				<input type="email" class="form-control" id="exampleFormControlInput1" name="exampleFormControlInput1" placeholder="walter.H.white@crystalblue.com">
+				<p class="soft-warning" style="font-size: 0.8rem;text-align: center;color: rgba(167,164,164, 0.72);">
+					Your information will never be stored or abused. This is to email you once your request has been added.
+				</p>
+			</div>
+			<div class="form-group">
+				<label for="exampleFormControlTextarea1" style="color:#fff;">Let us know what you want to see on CouchPotato next! :D</label>
+				<textarea class="form-control" id="exampleFormControlTextarea1" name="exampleFormControlTextarea1" rows="3" required=""></textarea>
+			</div>
+			<button type="submit" id="submitIssue" class="btn btn-success">Submit Issue</button>
+		</form>
+	</div>
+</div>
+{% else %}
+<div class="about-us-container" style="margin-bottom:50px;padding:0 20px;">
+	<div class="headline" style="text-align:center;">
+		<h4 style="color:#ffc107;tex-align:center;">A League of CouchPotatoes</h4>
+	</div>
+	<p>Here at CouchPotato our mission is to provide the best online movie streaming website with the most minimal amount of ads possible.</p>
+	<p>We make absolute no profit off of this website aside from what you choose to donate (Which we very much appreciate). This website was
+		originally created to test our abilities as programmers and web developers.</p>
+	<p>We designed a bot to collect the links of public servers hosting the online videos you are watching. We do not host a single video on our servers.
+		 We are basically like a Google for online videos. With those links we collected we strip them down of as many pop up ads as possible. Yes, there may
+		 still be some ads, but trust us. We are saving you from more than you think!</p>
+	<p>It started off as a challenge of our abilities and slowly became spread to our friends and family. Now we are more than happy to share
+		our entire project globally to whoever wants to watch movies without those annoying pop up ads that other sites have. (I won't name drop but you know)</p>
+	<p>Our goal will be to always remain free and open to the public. So we hope you enjoy our service and share this website with your friends too! :D</p>
+
+	<div class="headline" style="text-align:center;">
+		<h4 style="color:#ffc107;tex-align:center;">Future Plans</h4>
+	</div>
+	<ul>
+		<li>Android App</li>
+		<li>iOS App</li>
+		<li>Xbox One Application</li>
+		<li>Firestick App</li>
+	</ul>
+
+	<h5 style="color:#ffc107;tex-align:center;">Stay tuned for more fellow CouchPotatoes!</h5>
+
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,243 @@
+body {
+  background: #232323 !important;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* tmp */
+  color: #fff;
+}
+.bg-dark { background: #232323 !important; }
+
+/* ===================
+ * NAVBAR STYLING
+ * =================== */
+button.navbar-toggler {
+  border: none !important;
+}
+
+.search-form > .form-inline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* =====================
+ * Gonna need a media
+ * query for larger screens
+ * SEARCH BAR ==========
+ * =================== */
+#search-form-section {
+  display: flex !important;
+  justify-content: center;
+}
+.search-form {
+  border-bottom: 1px solid #fff;
+  width: 90%;
+}
+#searchResult {
+  border: 1px solid #ffc107;
+  border-top: none;
+  position: absolute;
+  background: #232323;
+  z-index: 5;
+  margin-top:-15px;
+}
+#searchResult > li {
+  padding: 5px 15px;
+}
+#searchResult > li:hover {
+  background-color: #ffc107;
+  color: #232323;
+  cursor: pointer;
+}
+
+.form-inline > .row > .col-sm > input {
+  width: 60vw;
+}
+.form-inline > .row:first-child > .col-sm {
+  margin-right: 0 !important;
+}
+.form-inline > .row:last-child > .col-sm {
+  padding: 0 0 0 10vw;
+}
+
+.form-inline > .row > .col-sm > input,
+.form-inline > .row > .col-sm > button {
+  border: none;
+  border-radius: 0;
+  background-color: rgba(0,0,0,0);
+  color: #fff;
+}
+
+/* ===================
+ * Scrolling Movies STYLING
+ * =================== */
+ .category-section-title > .container {
+   margin-bottom: -15px !important;
+ }
+ .category-label {
+   display: flex;
+   justify-content: flex-start;
+ }
+ .see-all-container-btn {
+   display: flex;
+   justify-content: flex-end;
+ }
+ .see-all-button {
+   color: #232323;
+   text-decoration: none;
+   padding: 10px 25px;
+   background: #ffc107;
+   border-radius: 5px;
+   transition: 0.3s;
+   -moz-transition: 0.3s;
+   -webkit-transition: 0.3s;
+ }
+ .see-all-button:hover {
+   color: #6868d3;
+   text-decoration: none;
+   background: #fff;
+   transition: 0.3s;
+   -moz-transition: 0.3s;
+   -webkit-transition: 0.3s;
+ }
+
+.image-overlay {
+  position:absolute !important;
+  height:191px;
+  width:130px;
+}
+.episode-circle {
+  width: 45%;
+  height: 30%;
+  border-radius: 100%;
+  float: right !important;
+  margin: 5px;
+  position: absolute;
+  background-color: #18af18bf;
+}
+.image-overlay > p {
+  width: 40%;
+  height: 25%;
+  border-radius: 100%;
+  color: #fff;
+  text-align: center;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+
+  position: absolute;
+  margin: 7px 5px 5px 7px;
+}
+
+.image-div > p {
+  overflow: hidden;
+  color: #fff;
+}
+
+.type-selection-overlay > img {
+  width: 100%;
+  margin: 0;
+}
+.entity-type-selection {
+  display: flex !important;
+  flex-flow: row wrap !important;
+  padding: 10px;
+  margin-bottom: 25px;
+}
+.entity-type-container {
+  padding: 0;
+  margin-bottom: 10px;
+}
+.movies-or-tv {
+  position: absolute;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.3);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+  font-family: 'Raleway', sans-serif;
+  font-size: 3.5rem;
+  height:100%;
+  width:100%;
+}
+.movies-or-tv > a {
+  text-decoration: none;
+  color: #fff;
+}
+.movies-or-tv > a:hover {
+  cursor: pointer;
+}
+#or {
+  font-family: 'Raleway', sans-serif;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  color: #909090;
+  padding: 5px;
+}
+
+.pure-menu-disabled, .pure-menu-heading, .pure-menu-link:hover {
+  background: none;
+  color: #ffc107;
+}
+
+
+/* ===================
+ * ENTITY PAGE STYLING
+ * =================== */
+
+ .overlay-top-controls {
+   display: flex;
+   flex-direction: row;
+   background-color: #000;
+   position:fixed;
+   width:100%;
+   z-index: 2;
+   top:0;
+ }
+.bookmark-video {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.left-back-arrow,
+.bookmark-video {
+  background-color: rgba(255,255,255,0.06);
+  padding: 15px 30px 0px 30px;
+}
+.left-back-arrow > h5,
+.bookmark-video > h5 {
+  font-size: 1.7em;
+}
+.left-back-arrow > h5 > a {
+  text-decoration: none;
+  color: #fff;
+}
+.left-back-arrow > h5 > a:hover {
+  text-decoration:none;
+  color: #fff;
+}
+
+.entity-frame-container {
+  margin-top:60px;
+}
+
+/* ======================
+ * SEARCH MOVIE PAGE
+ * ====================== */
+
+.search-movie-link {
+  text-decoration:none;
+  color:#fff;
+}
+.search-movie-link:hover {
+  text-decoration:none;
+  background:none;
+  cursor: pointer;
+  color:#fff;
+
+}

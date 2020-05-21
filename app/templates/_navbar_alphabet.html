@@ -1,0 +1,97 @@
+<!-- NAVBAR CONTAINER -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{{ url_for('index') }}">CouchPotato</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('moviesOnly') }}">Movies</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('tvShowsOnly') }}">TV Shows</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Categories
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          {% for genre in all_categories %}
+            <a class="dropdown-item" href="{{ url_for('categories', entity_type='all', category=genre) }}">{{ genre }}</a>
+          {% endfor %}
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('requestEntity') }}">Request Movie</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('aboutUs') }}">About Us</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- SEARCH FORM -->
+<section id="search-form-section">
+  <div class="search-form">
+    <form class="form-inline" action="{{ url_for('searchQuery') }}" method="GET">
+      <div class="row">
+        <div class="col-sm">
+          <input class="form-control mr-sm-2" name="q" id="autocomplete" autocomplete="off" type="search" placeholder="Search For Movie or Tv Show" aria-label="Search">
+          <ul style="list-style:none;box-shadow:0 2px 5px rgba(0,0,0,0.3);padding:0;">
+            <li id="close-autocomplete" style="padding:5px 15px;background-color:yellow;color:#232323;" hidden>Close Search</li>
+          </ul>
+          <ul id="searchResult" style="list-style:none;box-shadow:0 2px 5px rgba(0,0,0,0.3);padding:0;"></ul>
+          <div id="error"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          <button class="btn btn-outline-success my-2 my-sm-0" id="submitSearchQuery" type="submit">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- SIDE SCROLLING ALPHABET SEARCH -->
+<div class="custom-menu-wrapper hide-back" id="alpha-search">
+    <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom" id="tuckedMenu">
+        <div class="custom-menu-screen"></div>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/a">A</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/b">B</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/c">C</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/d">D</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/e">E</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/f">F</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/g">G</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/h">H</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/i">I</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/j">J</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/k">K</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/l">L</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/m">M</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/n">N</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/o">O</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/p">P</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/q">Q</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/r">R</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/s">S</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/t">T</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/u">U</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/v">V</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/w">W</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/x">X</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/y">Y</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/alphabet/z">Z</a></li>
+        </ul>
+    </div>
+</div>
