@@ -88,7 +88,7 @@
                             $('.loader').show();
                             $('.torrent-display').show();
                             fetch(
-                                'http://localhost:8111/api/searchtorrent/' + item.original_title
+                                '/api/searchtorrent/' + item.original_title
                             )
                             .then(r => r.json())
                             .then(torrent => {
@@ -107,8 +107,8 @@
                                 }
 
                                 // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                                // $.get(api + 'api/add/' + infoHash, function(data) {
-                                //     var video = api + 'stream/' + infoHash + '.mp4';
+                                // $.get('/api/add/' + infoHash, function(data) {
+                                //     var video = '/stream/' + infoHash + '.mp4';
                                 //     $('video').attr('src', video);
                                 //     $('.input').hide();
                                 //     $('.video').show();
@@ -148,7 +148,7 @@
                         $('.loader').show();
                         $('.torrent-display').show();
                         fetch(
-                            'http://localhost:8111/api/searchtorrent/' + item.original_title
+                            '/api/searchtorrent/' + item.original_title
                         )
                         .then(r => r.json())
                         .then(torrent => {
@@ -167,8 +167,8 @@
                             }
 
                             // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                            // $.get(api + 'api/add/' + infoHash, function(data) {
-                            //     var video = api + 'stream/' + infoHash + '.mp4';
+                            // $.get('/api/add/' + infoHash, function(data) {
+                            //     var video = '/stream/' + infoHash + '.mp4';
                             //     $('video').attr('src', video);
                             //     $('.input').hide();
                             //     $('.video').show();
@@ -187,15 +187,15 @@
             var api = 'http://localhost:8111/';
             $('.stream').click(function() {
                 window.infoHash = $('input').val().split('btih:')[1].split('&')[0];
-                $.get(api + 'api/add/' + infoHash, function(data) {
-                    var video = api + 'stream/' + infoHash + '.mp4';
+                $.get('/api/add/' + infoHash, function(data) {
+                    var video = '/stream/' + infoHash + '.mp4';
                     $('video').attr('src', video);
                     $('.input').hide();
                     $('.video').show();
                 });
             });
             $('.stop').click(function() {
-                $.get(api + 'api/delete/' + infoHash, function(data) {
+                $.get('/api/delete/' + infoHash, function(data) {
                     $('video').attr('src', '');
                     $('input').val('');
                     window.infoHash = '';
@@ -220,8 +220,8 @@
                     item.setAttribute('data-magnet', magnet);
                     item.onclick = (() => {
                         window.infoHash = magnet.split('btih:')[1].split('&')[0];
-                        $.get(api + 'api/add/' + infoHash, function(data) {
-                            var video = api + 'stream/' + infoHash + '.mp4';
+                        $.get('/api/add/' + infoHash, function(data) {
+                            var video = '/stream/' + infoHash + '.mp4';
                             $('video').attr('src', video);
                             $('.input').hide();
                             $('.video').show();
@@ -321,7 +321,7 @@
                 $('.loader').show();
                 $('.torrent-display').show();
                 fetch(
-                    'http://localhost:8111/api/searchtorrent/' + $('#q').val()
+                    '/api/searchtorrent/' + $('#q').val()
                 )
                 .then(r => r.json())
                 .then(torrent => {
@@ -340,8 +340,8 @@
                     }
 
                     // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                    // $.get(api + 'api/add/' + infoHash, function(data) {
-                    //     var video = api + 'stream/' + infoHash + '.mp4';
+                    // $.get('/api/add/' + infoHash, function(data) {
+                    //     var video = '/stream/' + infoHash + '.mp4';
                     //     $('video').attr('src', video);
                     //     $('.input').hide();
                     //     $('.video').show();
