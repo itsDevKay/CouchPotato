@@ -184,7 +184,7 @@
                 observer.observe(currentTarget);
             });
 
-            var api = 'http://localhost:8111/';
+            var api = 'http://localhost/';
             $('.stream').click(function() {
                 window.infoHash = $('input').val().split('btih:')[1].split('&')[0];
                 $.get('/api/add/' + infoHash, function(data) {

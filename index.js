@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var jsonParser = bodyParser.json();
 
-var port = 8111;
+var port = 80;
 
 var client = new WebTorrent();
 
