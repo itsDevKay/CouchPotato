@@ -3,6 +3,7 @@ import WebTorrent from 'webtorrent';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import http from 'http';
+import TorrentSearchApi from 'torrent-search-api';
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -39,6 +40,27 @@ var getLargestFile = async function (torrent) {
 var buildMagnetURI = function(infoHash) {
 	return 'magnet:?xt=urn:btih:' + infoHash + '&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.ccc.de%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969';
 };
+
+app.get('/api/searchtorrent/:movie', async function(req, res) {
+    TorrentSearchApi.enablePublicProviders();
+
+    // Search '1080' in 'Movies' category and limit to 20 results
+    const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 20);
+    let playableTorrents = [];
+    try {
+        for (let i=0; i < torrents.length; i++) {
+            let torrentHtmlDetail = await TorrentSearchApi.getTorrentDetails(torrents[i]);
+            if (torrentHtmlDetail.includes('.mp4')) {
+                playableTorrents.push({
+                    torrent: torrents[i],
+                    magnet: await TorrentSearchApi.getMagnet(torrents[i])
+                });
+            }
+        }
+    } catch (e) { null; }
+    console.log(playableTorrents);
+    res.status(200).json({ torrents: playableTorrents })
+});
 
 app.get('/api/add/:infoHash', function(req, res) {
 	if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {

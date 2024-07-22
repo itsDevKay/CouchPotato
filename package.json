@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "express": "^4.19.2",
+    "torrent-search-api": "^2.1.4",
     "webtorrent": "^2.4.12"
   }
 }
