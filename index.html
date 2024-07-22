@@ -1,10 +1,37 @@
 <html>
     <title>BrowserTorrent</title>
         <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <style>
+            body {
+                overflow-wrap: anywhere;
+            }
+            .item {
+                justify-content: space-between;
+            }
+            .item:hover {
+                background-color: #262626;
+            }
+            .loader {
+                margin: auto;
+                border: 2px solid #eaf0f6c9;
+                border-radius: 50%;
+                border-top: 2px solid #d28c41;
+                width: 25px;
+                height: 25px;
+                animation: spinner 0.5s linear infinite;
+            }
+
+            @keyframes spinner {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            video { width: 100%; }
+        </style>
         <script>
         $(function() {
-            var api = 'http://localhost:9111/';
+            var api = 'http://localhost:8111/';
             $('.stream').click(function() {
                 window.infoHash = $('input').val().split('btih:')[1].split('&')[0];
                 $.get(api + 'api/add/' + infoHash, function(data) {
@@ -24,22 +51,98 @@
                 });
             });
 
+            const createResultItem = (title, seeds, magnet) => {
+                // <div class="item" style="border-bottom: 1px solid #f1f1f1; height: 65px; width: 100%;">
+                let item = document.createElement('div');
+                    item.classList.add('item');
+                    item.style.borderBottom = '1px solid #f1f1f1';
+                    item.style.height = '65px';
+                    item.style.cursor = 'pointer';
+                    item.style.width = '100%';
+                    item.style.display = 'flex';
+                    item.style.alignItems = 'center';
+                    item.style.justifyContent = 'justify-between';
+                    item.style.color = '#f1f1f1';
+                    item.style.padding = '0 5px';
+                    item.setAttribute('data-magnet', magnet);
+                    item.onclick = (() => {
+                        window.infoHash = magnet.split('btih:')[1].split('&')[0];
+                        $.get(api + 'api/add/' + infoHash, function(data) {
+                            var video = api + 'stream/' + infoHash + '.mp4';
+                            $('video').attr('src', video);
+                            $('.input').hide();
+                            $('.video').show();
+                            $('.torrent-display').hide();
+                        });
+                    });
+
+                let _title = document.createElement('p');
+                _title.textContent = title;
+                _title.style.width = '75%';
+                _title.style.overflowWrap = 'anywhere';
+                
+                let seedDiv = document.createElement('div');
+                seedDiv.style.color = '#f1f1f1';
+                seedDiv.style.display = 'flex';
+                seedDiv.style.alignItems = 'center';
+
+                let _seedCount = document.createElement('p');
+                _seedCount.textContent = `Seeds: ${seeds}`;
+                _seedCount.style.paddingRight = '5px';
+
+                let _seedIcon = document.createElement('div');
+
+                // if height and widht has to be changed otherwise you put them directly in svg_str
+                const h = 23 + 'px';
+                const w = 23 + 'px';
+                const fill = seeds >= 100 ? 'green' : (
+                    seeds < 50 ? 'red' : 'orange'
+                );
+                // if path is a variable otherwise you put directly in svg_str
+                const path_d = "M4,14H2V2H4ZM7,5H5v9H7Zm3,3H8v6h2Zm3,3H11v3h2Z";
+
+                svg_str = '<svg xmlns="http://www.w3.org/2000/svg" fill="' + fill + '" width="' + w + '" height="' + h + '"><path d="' + path_d + '"/></svg>';
+                    
+                document.querySelector('.results-container').appendChild(item);
+
+                item.appendChild(_title);
+                item.appendChild(seedDiv);
+
+                seedDiv.appendChild(_seedCount);
+                seedDiv.appendChild(_seedIcon);
+
+                _seedIcon.innerHTML = svg_str;
+            }
+
             $('.search').click(() => {
+                $('.loader').show();
+                $('.torrent-display').show();
                 fetch(
-                    'http://localhost:9111/api/searchtorrent/' + 
-                    $('#q').val()
+                    'http://localhost:8111/api/searchtorrent/' + $('#q').val()
                 )
                 .then(r => r.json())
                 .then(torrent => {
-                    console.log(torrent);
-                    alert('searching');
-                    window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                    $.get(api + 'api/add/' + infoHash, function(data) {
-                        var video = api + 'stream/' + infoHash + '.mp4';
-                        $('video').attr('src', video);
-                        $('.input').hide();
-                        $('.video').show();
-                    });
+                    $('.loader').hide();
+                    for (let i=0; i < torrent.torrents.length; i++) {
+                        if (document.querySelector('.results-container').children.length == 0) {
+                            for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
+                                document.querySelector('.results-container').children[i].remove();
+                            }
+                        }
+                        createResultItem(
+                            torrent.torrents[i].torrent.title, 
+                            torrent.torrents[i].torrent.seeds,
+                            torrent.torrents[i].magnet
+                        )
+                    }
+
+                    // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
+                    // $.get(api + 'api/add/' + infoHash, function(data) {
+                    //     var video = api + 'stream/' + infoHash + '.mp4';
+                    //     $('video').attr('src', video);
+                    //     $('.input').hide();
+                    //     $('.video').show();
+                    // });
                 });
             })
         });
@@ -53,6 +156,14 @@
                 <br>
                 <button class="stop">Stop</button>
             </div>
+
+            <div class="torrent-display" style="display: none; padding: 5px 15px;background: #333; border: 4px solid #d28c41;height: 80%;width: 80%;position: absolute;left: 50%;right: 50%;top: 50%;bottom: 50%;transform: translateX(-50%) translateY(-50%);box-shadow: 0 2px 15px 5px rgba(0,0,0,0.2);">
+                <h2 style="color: #f1f1f1;">Torrents</h2>
+                <div class="results-container" style="overflow-y:scroll; height: 85%; overflow-x:hidden;">
+                    <div class="loader" style="display: none;"></div>
+                </div>
+            </div>
+
             <div class="input">
                 <p>Sample torrent: magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&amp;dn=sintel.mp4 (Sintel Open Source Movie, H.264 MP4, ~120 MiB). </p>
                 <p>magnet:?xt=urn:btih:E31454B4E45DAF5FDA033FAD5D0D16219C8F9D55&dn=El+Camino+A+Breaking+Bad+Movie+%282019%29+%5B1080p%5D+%5BWEBRip%5D&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2920%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce</p>

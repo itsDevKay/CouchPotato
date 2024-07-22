@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 
 var app = express();
 
-var port = 9111;
+var port = 8111;
 
 var client = new WebTorrent();
 
@@ -42,20 +42,22 @@ var buildMagnetURI = function(infoHash) {
 };
 
 app.get('/api/searchtorrent/:movie', async function(req, res) {
+    console.log('[-] searchtorrent init');
     TorrentSearchApi.enablePublicProviders();
 
     // Search '1080' in 'Movies' category and limit to 20 results
     const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 20);
+    console.log(torrents);
     let playableTorrents = [];
     try {
         for (let i=0; i < torrents.length; i++) {
-            let torrentHtmlDetail = await TorrentSearchApi.getTorrentDetails(torrents[i]);
-            if (torrentHtmlDetail.includes('.mp4')) {
+            // let torrentHtmlDetail = await TorrentSearchApi.getTorrentDetails(torrents[i]);
+            // if (torrentHtmlDetail.includes('.mp4')) {
                 playableTorrents.push({
                     torrent: torrents[i],
                     magnet: await TorrentSearchApi.getMagnet(torrents[i])
                 });
-            }
+            // }
         }
     } catch (e) { null; }
     console.log(playableTorrents);
@@ -63,7 +65,7 @@ app.get('/api/searchtorrent/:movie', async function(req, res) {
 });
 
 app.get('/api/add/:infoHash', function(req, res) {
-	if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
+	if (typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
 		res.status(500).send('Missing infoHash parameter!'); return;
 	}
     console.log('[-] Building magnet URI...');
@@ -79,34 +81,34 @@ app.get('/api/add/:infoHash', function(req, res) {
             console.log('[-] Retrieved file. Starting swarm...');
 			torrent.on('upload', function() {
                 // if (torrent.progress != 1) {
-                    console.log(torrent.progress * 100);
+                    // console.log(torrent.progress * 100);
                 // }
 				if (torrent.length == torrent.downloaded) {
-                    // console.log('[-] Torrent downloaded. Cleaning up...')
-					// torrent.swarm.destroy();
+                    // console.log('[-] Torrent downloaded. Cleaning up...');
+					// // torrent.destroy();
+                    // console.log('[-] Torrent destroyed');
 					// torrent.discovery.stop();
 				}
 			});
             torrent.on('download', function (bytes) {
-                if (!torrent.done) {
-                    console.log('just downloaded: ' + bytes)
-                    console.log('total downloaded: ' + torrent.downloaded)
-                    console.log('download speed: ' + torrent.downloadSpeed)
-                    console.log('progress: ' + torrent.progress)
-                }
+                // if (torrent.done) {
+                //     console.log('just downloaded: ' + bytes)
+                //     console.log('total downloaded: ' + torrent.downloaded)
+                //     console.log('download speed: ' + torrent.downloadSpeed)
+                //     console.log('progress: ' + torrent.progress)
+                // }
             });
-            torrent.on('done', function(){
-                console.log('torrent finished downloading')
-                torrent.files.forEach(function(file){
-                   // do something with file
-                   console.log(file.name);
+            torrent.on('done', function() {
+                console.log('torrent finished downloading');
+                torrent.files.forEach(function(file) {
+                    console.log(file);
                 });
             });
 			res.status(200).send('Added torrent!');
 		});
 	} catch (err) {
         console.log(err);
-		res.status(500).send('Error: ' + err.toString());
+		// res.status(500).send('Error: ' + err.toString());
 	}
 });
 
@@ -124,7 +126,7 @@ app.get('/stream/:infoHash.mp4', function(req, res, next) {
 	try {
 		client.get(torrent)
         .then(torrent => {
-            var file = getLargestFile(torrent).then(file => {
+            getLargestFile(torrent).then(file => {
                 console.log(file.name);
                 var total = file.length;
 
@@ -134,22 +136,35 @@ app.get('/stream/:infoHash.mp4', function(req, res, next) {
                     var parts = range.replace(/bytes=/, "").split("-");
                     console.log(`Parts: ${parts}`);
                     var partialstart = parts[0];
+                    console.log(`PartialStart: ${partialstart}`);
                     var partialend = parts[1];
+                    console.log(`PartialEnd: ${partialend}`);
                     var start = parseInt(partialstart, 10);
                     var end = partialend ? parseInt(partialend, 10) : total - 1;
                     var chunksize = (end - start) + 1;
+                    console.log(`ChunkSize: ${chunksize}`);
+                    console.log(`Start: ${start} | End: ${end}`);
                 } else {
+                    console.log('[-] else caught here');
                     var start = 0; var end = total;
                 }
                 
                 var stream = file.createReadStream({start: start, end: end});
+                console.log({ 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
                 res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
                 stream.pipe(res);
+                stream.on('error', (err) => {
+                    console.log(err);
+                    console.log('[-] Stream closed on error');
+                });
+                stream.on('data', (chunk) => {
+                    console.log(`Received ${chunk.length} bytes of data.`);
+                })
             });
         });
 	} catch (err) {
         console.log(err);
-		res.status(500).send('Error: ' + err.toString());
+		// res.status(500).send('Error: ' + err.toString());
 	}
 });
 
