@@ -4,11 +4,21 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import http from 'http';
 import TorrentSearchApi from 'torrent-search-api';
+import fetch from 'node-fetch';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
 var app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+var jsonParser = bodyParser.json();
 
 var port = 8111;
 
@@ -45,22 +55,64 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/index.html'));
 });
 
+app.get('/api/movies', (req, res) => {
+    let page = 1;
+    // images = https://images.tmdb.org/t/p/original/
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${process.env.tmdbAPI}`
+    }
+    };
+
+    fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+            // console.log(json)
+            res.status(200).json(json);
+        })
+        .catch(err => console.error('error:' + err));
+})
+
+app.get('/api/movies/:page', jsonParser, (req, res) => {
+    let page = req.params.page;
+    // images = https://images.tmdb.org/t/p/original/
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYjg4M2Q3N2U5NWM2MDJkZmNlMGVmYjU1ODY1NmJmNSIsIm5iZiI6MTcyMTY0MTE3NC4zMjQ1MjEsInN1YiI6IjVhNDVkNzc1YzNhMzY4NThjNTA3MDAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RyzPcvJN6fZIN49FETwhtmI3EiANrLJTJYe4fBKtqFQ'
+    }
+    };
+
+    fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+            // console.log(json)
+            res.status(200).json(json);
+        })
+        .catch(err => console.error('error:' + err));
+})
+
 app.get('/api/searchtorrent/:movie', async function(req, res) {
     console.log(`[-] searchtorrent init... Query: ${req.params.movie}`);
     TorrentSearchApi.enablePublicProviders();
 
     // Search '1080' in 'Movies' category and limit to 20 results
-    const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 20);
+    const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 50);
     let playableTorrents = [];
     try {
         for (let i=0; i < torrents.length; i++) {
-            // let torrentHtmlDetail = await TorrentSearchApi.getTorrentDetails(torrents[i]);
-            // if (torrentHtmlDetail.includes('.mp4')) {
+            let torrentHtmlDetail = await TorrentSearchApi.getTorrentDetails(torrents[i]);
+            if (torrentHtmlDetail.includes('.mp4')) {
                 playableTorrents.push({
                     torrent: torrents[i],
                     magnet: await TorrentSearchApi.getMagnet(torrents[i])
                 });
-            // }
+            }
         }
     } catch (e) { null; }
     res.status(200).json({ torrents: playableTorrents })
@@ -107,9 +159,13 @@ app.get('/api/add/:infoHash', function(req, res) {
             });
 			res.status(200).send('Added torrent!');
 		});
+
+        client.on('error', (err) => {
+            // just keep swimming
+        })
 	} catch (err) {
         console.log(err);
-		// res.status(500).send('Error: ' + err.toString());
+		res.status(500).send('Error: ' + err.toString());
 	}
 });
 
