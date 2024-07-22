@@ -41,13 +41,16 @@ var buildMagnetURI = function(infoHash) {
 	return 'magnet:?xt=urn:btih:' + infoHash + '&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.ccc.de%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969';
 };
 
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, '/index.html'));
+});
+
 app.get('/api/searchtorrent/:movie', async function(req, res) {
-    console.log('[-] searchtorrent init');
+    console.log(`[-] searchtorrent init... Query: ${req.params.movie}`);
     TorrentSearchApi.enablePublicProviders();
 
     // Search '1080' in 'Movies' category and limit to 20 results
     const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 20);
-    console.log(torrents);
     let playableTorrents = [];
     try {
         for (let i=0; i < torrents.length; i++) {
@@ -60,7 +63,6 @@ app.get('/api/searchtorrent/:movie', async function(req, res) {
             // }
         }
     } catch (e) { null; }
-    console.log(playableTorrents);
     res.status(200).json({ torrents: playableTorrents })
 });
 
@@ -70,9 +72,8 @@ app.get('/api/add/:infoHash', function(req, res) {
 	}
     console.log('[-] Building magnet URI...');
 	var torrent = buildMagnetURI(req.params.infoHash);
-    // console.log(torrent);
-	try {
-        // console.log(client);
+    
+    try {
         console.log('[-] Adding torrent to client...');
 		client.add(torrent, function (torrent) {
             console.log('[-] client.add init...');
@@ -132,20 +133,13 @@ app.get('/stream/:infoHash.mp4', function(req, res, next) {
 
                 if(typeof req.headers.range != 'undefined') {
                     var range = req.headers.range;
-                    console.log(`Range: ${range}`);
                     var parts = range.replace(/bytes=/, "").split("-");
-                    console.log(`Parts: ${parts}`);
                     var partialstart = parts[0];
-                    console.log(`PartialStart: ${partialstart}`);
                     var partialend = parts[1];
-                    console.log(`PartialEnd: ${partialend}`);
                     var start = parseInt(partialstart, 10);
                     var end = partialend ? parseInt(partialend, 10) : total - 1;
                     var chunksize = (end - start) + 1;
-                    console.log(`ChunkSize: ${chunksize}`);
-                    console.log(`Start: ${start} | End: ${end}`);
                 } else {
-                    console.log('[-] else caught here');
                     var start = 0; var end = total;
                 }
                 
