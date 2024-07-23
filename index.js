@@ -65,7 +65,8 @@ app.get('/', function(req, res) {
 app.get('/api/movies', (req, res) => {
     let page = 1;
     // images = https://images.tmdb.org/t/p/original/
-    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    // const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    const url = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1';
     const options = {
     method: 'GET',
     headers: {
@@ -86,7 +87,8 @@ app.get('/api/movies', (req, res) => {
 app.get('/api/movies/:page', jsonParser, (req, res) => {
     let page = req.params.page;
     // images = https://images.tmdb.org/t/p/original/
-    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    // const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+    const url = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}`;
     const options = {
     method: 'GET',
     headers: {
@@ -109,7 +111,8 @@ app.get('/api/searchtorrent/:movie', async function(req, res) {
     TorrentSearchApi.enablePublicProviders();
 
     // Search '1080' in 'Movies' category and limit to 20 results
-    const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 50);
+    const torrents = await TorrentSearchApi.search(req.params.movie, 'Movies', 35);
+    // console.log(torrents);
     let playableTorrents = [];
     try {
         for (let i=0; i < torrents.length; i++) {
@@ -159,9 +162,9 @@ app.get('/api/add/:infoHash', function(req, res) {
                 // }
             });
             torrent.on('done', function() {
-                console.log('torrent finished downloading');
+                console.log(`[-] ${torrent.files.length} files downloaded.`);
                 torrent.files.forEach(function(file) {
-                    console.log(file);
+                    console.log(`\t[-] ${file.name}`);
                 });
             });
 			res.status(200).send('Added torrent!');
