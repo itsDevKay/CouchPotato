@@ -4,6 +4,8 @@ package-lock.json
 *.log
 *.gz
 
+.DS_Store
+
 # Coveralls
 .nyc_output
 coverage

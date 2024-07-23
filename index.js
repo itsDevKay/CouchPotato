@@ -1,3 +1,10 @@
+// TODO: When a user starts playing a video. Create a socket that continuously checks in on what hash
+// is being used. Check that inside of /tmp/webtorrent/ directory.
+// For any hash that is not being used and verified through the sockets of the video playing,
+// then delete from server.
+
+
+
 import express from 'express'
 import WebTorrent from 'webtorrent';
 import path from 'path';
