@@ -4,7 +4,6 @@
 // then delete from server.
 
 
-
 import express from 'express'
 import WebTorrent from 'webtorrent';
 import path from 'path';
@@ -16,6 +15,12 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import pkg from './torrent_file_system.cjs';
+const { runtest } = pkg;
+pkg.readFromSystem()
+.then(f => {
+    console.log(f);
+})
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -137,7 +142,10 @@ app.get('/api/add/:infoHash', function(req, res) {
     
     try {
         console.log('[-] Adding torrent to client...');
-		client.add(torrent, function (torrent) {
+		client.add(torrent, {
+            addUID: true, //the torrent will be stored in it's infoHash folder to prevent file name collisions
+            path: process.env.TORRENT_PATH // default is /tmp/webtorrent. View README for setting up s3fs on Ubuntu
+        }, function (torrent) {
             console.log('[-] client.add init...');
 			var file = getLargestFile(torrent);
             // console.log(file); // tmp/webtorrent/[file].mp4
