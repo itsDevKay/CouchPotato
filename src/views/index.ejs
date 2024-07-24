@@ -77,6 +77,9 @@
                         iContainer.style.padding = '10px';
                         iContainer.id = `movieitem-${(idx+1)+(intersectionCounter*19)}`;
                         
+                        let iAhref = document.createElement('a');
+                        iAhref.href = `/movies/${item.id}`;
+
                         let i = document.createElement('div');
                         i.classList.add('movie-item');
                         i.setAttribute('data-original-title', item.original_title);
@@ -84,40 +87,41 @@
                             'style', 
                             `background-image:url("https://images.tmdb.org/t/p/original${item.poster_path}");height:240px; width:120px;padding-right:10px;padding-bottom:10px;border-radius: 15px;box-shadow: 0 2px 15px 2px #201f1f9e;background-size: cover;background-position: center;background-repeat: no-repeat;cursor:pointer;`
                         );
-                        i.onclick = (() => {
-                            $('.loader').show();
-                            $('.torrent-display').show();
-                            fetch(
-                                '/api/searchtorrent/' + item.original_title
-                            )
-                            .then(r => r.json())
-                            .then(torrent => {
-                                $('.loader').hide();
-                                for (let i=0; i < torrent.torrents.length; i++) {
-                                    if (document.querySelector('.results-container').children.length == 0) {
-                                        for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
-                                            document.querySelector('.results-container').children[i].remove();
-                                        }
-                                    }
-                                    createResultItem(
-                                        torrent.torrents[i].torrent.title, 
-                                        torrent.torrents[i].torrent.seeds,
-                                        torrent.torrents[i].magnet
-                                    );
-                                }
+                        // i.onclick = (() => {
+                        //     $('.loader').show();
+                        //     $('.torrent-display').show();
+                        //     fetch(
+                        //         '/api/searchtorrent/' + item.original_title
+                        //     )
+                        //     .then(r => r.json())
+                        //     .then(torrent => {
+                        //         $('.loader').hide();
+                        //         for (let i=0; i < torrent.torrents.length; i++) {
+                        //             if (document.querySelector('.results-container').children.length == 0) {
+                        //                 for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
+                        //                     document.querySelector('.results-container').children[i].remove();
+                        //                 }
+                        //             }
+                        //             createResultItem(
+                        //                 torrent.torrents[i].torrent.title, 
+                        //                 torrent.torrents[i].torrent.seeds,
+                        //                 torrent.torrents[i].magnet
+                        //             );
+                        //         }
 
-                                // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                                // $.get('/api/add/' + infoHash, function(data) {
-                                //     var video = '/stream/' + infoHash + '.mp4';
-                                //     $('video').attr('src', video);
-                                //     $('.input').hide();
-                                //     $('.video').show();
-                                // });
-                            });
-                        })
+                        //         // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
+                        //         // $.get('/api/add/' + infoHash, function(data) {
+                        //         //     var video = '/stream/' + infoHash + '.mp4';
+                        //         //     $('video').attr('src', video);
+                        //         //     $('.input').hide();
+                        //         //     $('.video').show();
+                        //         // });
+                        //     });
+                        // });
 
                         itemContainer.appendChild(iContainer);
-                        iContainer.appendChild(i);
+                        iContainer.appendChild(iAhref);
+                        iAhref.appendChild(i);
                     });
 
                     previousTarget = currentTarget;
@@ -137,6 +141,9 @@
                     iContainer.style.padding = '10px';
                     iContainer.id = `movieitem-${idx}`;
                     
+                    let iAhref = document.createElement('a');
+                    iAhref.href = `/movies/${item.id}`;
+                        
                     let i = document.createElement('div');
                     i.classList.add('movie-item');
                     i.setAttribute('data-original-title', item.original_title);
@@ -144,40 +151,41 @@
                         'style', 
                         `background-image:url("https://images.tmdb.org/t/p/original${item.poster_path}");height:240px; width:120px;padding-right:10px;padding-bottom:10px;border-radius: 15px;box-shadow: 0 2px 15px 2px #201f1f9e;background-size: cover;background-position: center;background-repeat: no-repeat;cursor:pointer;`
                     );
-                    i.onclick = (() => {
-                        $('.loader').show();
-                        $('.torrent-display').show();
-                        fetch(
-                            '/api/searchtorrent/' + item.original_title
-                        )
-                        .then(r => r.json())
-                        .then(torrent => {
-                            $('.loader').hide();
-                            for (let i=0; i < torrent.torrents.length; i++) {
-                                if (document.querySelector('.results-container').children.length == 0) {
-                                    for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
-                                        document.querySelector('.results-container').children[i].remove();
-                                    }
-                                }
-                                createResultItem(
-                                    torrent.torrents[i].torrent.title, 
-                                    torrent.torrents[i].torrent.seeds,
-                                    torrent.torrents[i].magnet
-                                );
-                            }
+                    // i.onclick = (() => {
+                    //     $('.loader').show();
+                    //     $('.torrent-display').show();
+                    //     fetch(
+                    //         '/api/searchtorrent/' + item.original_title
+                    //     )
+                    //     .then(r => r.json())
+                    //     .then(torrent => {
+                    //         $('.loader').hide();
+                    //         for (let i=0; i < torrent.torrents.length; i++) {
+                    //             if (document.querySelector('.results-container').children.length == 0) {
+                    //                 for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
+                    //                     document.querySelector('.results-container').children[i].remove();
+                    //                 }
+                    //             }
+                    //             createResultItem(
+                    //                 torrent.torrents[i].torrent.title, 
+                    //                 torrent.torrents[i].torrent.seeds,
+                    //                 torrent.torrents[i].magnet
+                    //             );
+                    //         }
 
-                            // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
-                            // $.get('/api/add/' + infoHash, function(data) {
-                            //     var video = '/stream/' + infoHash + '.mp4';
-                            //     $('video').attr('src', video);
-                            //     $('.input').hide();
-                            //     $('.video').show();
-                            // });
-                        });
-                    })
+                    //         // window.infoHash = torrent.torrents[0].magnet.split('btih:')[1].split('&')[0];
+                    //         // $.get('/api/add/' + infoHash, function(data) {
+                    //         //     var video = '/stream/' + infoHash + '.mp4';
+                    //         //     $('video').attr('src', video);
+                    //         //     $('.input').hide();
+                    //         //     $('.video').show();
+                    //         // });
+                    //     });
+                    // });
 
                     itemContainer.appendChild(iContainer);
-                    iContainer.appendChild(i);
+                    iContainer.appendChild(iAhref);
+                    iAhref.appendChild(i);
                 });
 
                 currentTarget = document.querySelector(`#movieitem-${10*intersectionCounter}`);
