@@ -7,7 +7,7 @@ dotenv.config();
 import { 
     getLargestFile, 
     buildMagnetURI 
-} from './utils.js';
+} from './tools/utils.js';
 
 import {
     jsonParser,
@@ -17,17 +17,18 @@ import {
 
 var client = new WebTorrent();
 
+
 app.get('/api/movies', (req, res) => {
     let page = 1;
     // images = https://images.tmdb.org/t/p/original/
     // const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
     const url = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1';
     const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${process.env.tmdbAPI}`
-    }
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.tmdbAPI}`
+        }
     };
 
     fetch(url, options)
@@ -37,8 +38,7 @@ app.get('/api/movies', (req, res) => {
             res.status(200).json(json);
         })
         .catch(err => console.error('error:' + err));
-})
-
+});
 
 
 app.get('/api/movies/:page', jsonParser, (req, res) => {
@@ -47,11 +47,11 @@ app.get('/api/movies/:page', jsonParser, (req, res) => {
     // const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
     const url = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}`;
     const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${process.env.tmdbAPI}`
-    }
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.tmdbAPI}`
+        }
     };
 
     fetch(url, options)
@@ -61,7 +61,47 @@ app.get('/api/movies/:page', jsonParser, (req, res) => {
             res.status(200).json(json);
         })
         .catch(err => console.error('error:' + err));
-})
+});
+
+app.get('/api/movies/details/:tmdbID', jsonParser, (req, res) => {
+    let tmdbID = req.params.tmdbID;
+    const url = `https://api.themoviedb.org/3/movie/${tmdbID}?language=en-US`;
+    // const url = 'https://api.themoviedb.org/3/movie/238?language=en-US';
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.tmdbAPI}`
+        }
+    };
+
+    fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+            let details = {}
+            // console.log(json)
+            details.details = json;
+
+            let credit_url = `https://api.themoviedb.org/3/movie/${tmdbID}/credits?language=en-US`;
+            const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MTQzYzY5NjA5ZDI1ODEzY2YwZjU3ZGU3Yjk5NTRmNCIsIm5iZiI6MTcyMTcwMDU4MC41OTM1NjgsInN1YiI6IjVhNDVkNzc1YzNhMzY4NThjNTA3MDAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.NpwmO6JEMpVDdSf3AUzoHq17e3Oe-2V5Cww68nz5UiY'
+            }
+            };
+
+            fetch(credit_url, options)
+            .then(res => res.json())
+            .then(data => {
+                details.credits = data;
+                res.status(200).json(details);
+            })
+            .catch(err => console.error('error:' + err));
+        })
+        .catch(err => console.error('error:' + err));
+});
+
 
 app.get('/api/searchtorrent/:movie', async function(req, res) {
     console.log(`[-] searchtorrent init... Query: ${req.params.movie}`);
@@ -82,8 +122,9 @@ app.get('/api/searchtorrent/:movie', async function(req, res) {
             }
         }
     } catch (e) { null; }
-    res.status(200).json({ torrents: playableTorrents })
+    res.status(200).json({ torrents: playableTorrents });
 });
+
 
 app.get('/api/add/:infoHash', function(req, res) {
 	if (typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
@@ -132,12 +173,13 @@ app.get('/api/add/:infoHash', function(req, res) {
 
         client.on('error', (err) => {
             // just keep swimming
-        })
+        });
 	} catch (err) {
         console.log(err);
 		res.status(500).send('Error: ' + err.toString());
 	}
 });
+
 
 app.get('/stream/:infoHash.mp4', function(req, res, next) {
     console.log('[-] Stream init');
@@ -178,7 +220,7 @@ app.get('/stream/:infoHash.mp4', function(req, res, next) {
                 });
                 stream.on('data', (chunk) => {
                     console.log(`Received ${chunk.length} bytes of data.`);
-                })
+                });
             });
         });
 	} catch (err) {

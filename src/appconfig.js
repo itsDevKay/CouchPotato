@@ -13,7 +13,7 @@ export let app = express();
 export let jsonParser = bodyParser.json();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'))
 
 // Allow Cross-Origin requests
 app.use(function(req, res, next) {
