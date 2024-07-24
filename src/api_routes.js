@@ -87,7 +87,7 @@ app.get('/api/movies/details/:tmdbID', jsonParser, (req, res) => {
             method: 'GET',
             headers: {
                 accept: 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MTQzYzY5NjA5ZDI1ODEzY2YwZjU3ZGU3Yjk5NTRmNCIsIm5iZiI6MTcyMTcwMDU4MC41OTM1NjgsInN1YiI6IjVhNDVkNzc1YzNhMzY4NThjNTA3MDAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.NpwmO6JEMpVDdSf3AUzoHq17e3Oe-2V5Cww68nz5UiY'
+                Authorization: `Bearer ${process.env.tmdbAPI}`
             }
             };
 
