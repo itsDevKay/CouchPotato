@@ -1,12 +1,12 @@
 
-import http from 'http';
-import { app } from './appconfig.js';
+import https from 'https';
+import { app, options } from './appconfig.js';
 import './routes.js';
 import './api_routes.js';
 
-var port = 80;
+var port = 443;
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 server.listen(port, function() {
 	console.log('Listening on http://127.0.0.1:' + port);
 });

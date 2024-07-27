@@ -84,18 +84,36 @@ app.get('/api/movies/details/:tmdbID', jsonParser, (req, res) => {
 
             let credit_url = `https://api.themoviedb.org/3/movie/${tmdbID}/credits?language=en-US`;
             const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${process.env.tmdbAPI}`
-            }
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${process.env.tmdbAPI}`
+                }
             };
+
 
             fetch(credit_url, options)
             .then(res => res.json())
             .then(data => {
                 details.credits = data;
-                res.status(200).json(details);
+
+
+                const url = `https://api.themoviedb.org/3/movie/${tmdbID}/videos?language=en-US`;
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: `Bearer ${process.env.tmdbAPI}`
+                    }
+                };
+
+                fetch(url, options)
+                .then(res => res.json())
+                .then(vjson => {
+                    details.videos = vjson;
+                    res.status(200).json(details);
+                })
+                .catch(err => console.error('error:' + err));
             })
             .catch(err => console.error('error:' + err));
         })

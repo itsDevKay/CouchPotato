@@ -4,6 +4,10 @@ package-lock.json
 *.log
 *.gz
 
+# certs
+/src/cert.pem
+/src/key.pem
+
 .DS_Store
 
 # Coveralls
