@@ -50,6 +50,7 @@ function stopVideo() {
     player.stopVideo();
     document.querySelector('.movie-backdrop').style.opacity = 0.45;
     $('.movie-trailer').remove();
+    $('.muted-container').remove();
 }
 
 let playMuted = false;
