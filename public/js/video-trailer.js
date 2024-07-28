@@ -48,7 +48,7 @@ function onPlayerReady(event) {
 
 function stopVideo() {
     player.stopVideo();
-    $('.movie-backdrop').show();
+    document.querySelector('.movie-backdrop').style.opacity = 0.45;
     $('.movie-trailer').remove();
 }
 
@@ -91,7 +91,12 @@ function onPlayerStateChange(event) {
         $('.umuted-icon').hide();
         done = true;
     } else if (event.data == YT.PlayerState.PLAYING) {
-        $('.movie-backdrop').hide();
+        // $('.movie-backdrop').hide();
+        document.querySelector('.movie-backdrop').style.opacity = 0;
+        setTimeout(() => {
+            document.querySelector('.movie-trailer').style.opacity = 0.55;
+        }, 500);
+
         if (player.isMuted()) {
             $('.muted-icon').show();
             $('.unmuted-icon').hide();
