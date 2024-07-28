@@ -403,7 +403,10 @@
 
             $('.play-movie').click(() => {
                 if (!isChrome()) {
-                    document.querySelector('.movie-trailer').remove();
+                    try {
+                        document.querySelector('.movie-trailer').remove();
+                    } catch (e) { null; }
+                    
                     $('.muted-container').remove();
                     document.querySelector('.movie-backdrop').style.opacity = 0.45;
                     $('.movie-display-container').show();
