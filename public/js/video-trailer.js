@@ -46,10 +46,6 @@ function onPlayerReady(event) {
     // player.mute()
 }
 
-var done = false;
-function onPlayerStateChange(event) {
-  
-}
 function stopVideo() {
     player.stopVideo();
     $('.movie-backdrop').show();
@@ -60,8 +56,6 @@ let playMuted = false;
 function playYouTubeTrailer(videoID, height, width, muted) {
     playMuted = muted;
     player = new YT.Player('movie-trailer', {
-        height: height,
-        width: width,
         playerVars: {
             autoplay: 1,
             loop: 1,
@@ -76,7 +70,7 @@ function playYouTubeTrailer(videoID, height, width, muted) {
             // host: `https://www.youtube.com`,
             iv_load_policy: 3,
             widget_referrer : window.location.href,
-            enablejsapi: 1
+            enablejsapi: 1,
         },
         videoId: videoID,
         events: {
@@ -93,10 +87,10 @@ var done = false;
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
         setTimeout(stopVideo, 6000);
+        $('.muted-icon').hide();
         done = true;
     } else if (event.data == YT.PlayerState.PLAYING) {
         $('.movie-backdrop').hide();
-        document.querySelector('.movie-trailer').style.height = window.innerHeight + 'px';
-        document.querySelector('.movie-trailer').style.width = window.innerWidth + 'px';
+        $('.muted-icon').show();
     }
 }
