@@ -404,7 +404,8 @@
             $('.play-movie').click(() => {
                 if (!isChrome()) {
                     document.querySelector('.movie-trailer').remove();
-                    $('.movie-backdrop').show();
+                    $('.muted-container').remove();
+                    document.querySelector('.movie-backdrop').style.opacity = 0.45;
                     $('.movie-display-container').show();
                 } else {
                     // use PotatoTorrents
