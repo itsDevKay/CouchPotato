@@ -48,19 +48,20 @@
         </style>
     </head>
     <body>
-        <div class="muted-container fixed right-1/2 left-1/2 top-[25px]" style="top:25px;">
+        <div class="muted-container fixed top-[32px] right-[110px] lg:right-1/2 lg:left-1/2 lg:top-[25px]">
             <svg class="hidden muted-icon cursor-pointer" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f1f1f1" width="32" height="32"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 5h2.79l3.86-3.83.85.35v13l-.85.33L4.29 11H1.5l-.5-.5v-5l.5-.5zm3.35 5.17L8 13.31V2.73L4.85 5.85 4.5 6H2v4h2.5l.35.17zm9.381-4.108l.707.707L13.207 8.5l1.731 1.732-.707.707L12.5 9.207l-1.732 1.732-.707-.707L11.793 8.5 10.06 6.77l.707-.707 1.733 1.73 1.731-1.731z"/></svg>
+            <svg class="hidden unmuted-icon cursor-pointer" fill="#f1f1f1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path fill-rule="evenodd" d="M11.553 3.064A.75.75 0 0112 3.75v16.5a.75.75 0 01-1.255.555L5.46 16H2.75A1.75 1.75 0 011 14.25v-4.5C1 8.784 1.784 8 2.75 8h2.71l5.285-4.805a.75.75 0 01.808-.13zM10.5 5.445l-4.245 3.86a.75.75 0 01-.505.195h-3a.25.25 0 00-.25.25v4.5c0 .138.112.25.25.25h3a.75.75 0 01.505.195l4.245 3.86V5.445z"/><path d="M18.718 4.222a.75.75 0 011.06 0c4.296 4.296 4.296 11.26 0 15.556a.75.75 0 01-1.06-1.06 9.5 9.5 0 000-13.436.75.75 0 010-1.06z"/><path d="M16.243 7.757a.75.75 0 10-1.061 1.061 4.5 4.5 0 010 6.364.75.75 0 001.06 1.06 6 6 0 000-8.485z"/></svg>
         </div>
         <div class="bg-slate-900 h-screen w-full fixed -z-20">
             <div id="movie-trailer" class="movie-trailer fixed -z-20" style="width: 2600px;height: 100%;left: -95%;top: 0%;"></div>
             <div class="movie-backdrop w-full h-full bg-cover bg-no-repeat bg-center opacity-45 fixed -z-10"></div>
 
-            <div class="flex flex-col items-center w-full h-full pt-6 px-10 justify-between lg:pt-7 lg:px-20">
+            <div class="flex flex-col items-center w-full h-full pt-6 px-[1.5rem] md:px-10 justify-between lg:pt-7 lg:px-20">
                 <div class="logo flex md:justify-start w-full items-center relative">
-                    <img src="/assets/_PotatoTorrent.png" height="42px" width="42px" />
+                    <img src="/assets/_PotatoTorrent.png" height="32px" width="32px" />
                     <div class="pl-3">
                         <p class="text-primary-white asap-font-light text-xs -mb-[5px]">Powered by</p>
-                        <h3 class="text-primary-white asap-font text-2xl p-0">PotatoTorrent</h3>
+                        <h3 class="text-primary-white asap-font text-xl md:text-2xl p-0">PotatoTorrent</h3>
                     </div>
 
                     <div class="profile absolute right-0 h-[45px] w-[45px] bg-pt-red rounded-full border-2 border-primary-white" style="box-shadow: 0 2px 5px rgba(30,34,41,35)"></div>
@@ -73,7 +74,7 @@
                     <div class="h-[calc(100vh/2.5)] lg:h-auto w-full mb-5 md:mb-0 md:w-full lg:w-3/5">
                         <div class="flex">
                             <!-- title -->
-                            <h2 class="text-left text-primary-white text-4xl md:text-5xl lg:text-6xl asap-font drop-shadow-md">
+                            <h2 class="text-left text-primary-white text-3xl md:text-5xl lg:text-6xl asap-font drop-shadow-md">
                                 <span class="title-text "></span>
                                 <span class="year-text text-primary-white asap-font-light text-2xl md:text-2xl lg:text-3xl drop-shadow-sm" style="align-self: end;"></span>
                             </h2>
@@ -82,7 +83,7 @@
                         <!-- cast -->
                         <p class="credit-text text-left text-sm pt-2 text-primary-white asap-font-regular drop-shadow-md"></p>
                         <!-- description -->
-                        <p class="description-text line-clamp-6 text-left pt-3 lg:pt-5 text-primary-white asap-font-light drop-shadow-md"></p>
+                        <p class="description-text line-clamp-6 text-left pt-3 text-[14px] md:text-base lg:pt-5 text-primary-white asap-font-light drop-shadow-md"></p>
                     </div>
 
                     <div class="flex flex-col w-full items-center md:w-auto md:items-end">
@@ -149,7 +150,7 @@
 
             let tmdbID = document.querySelector('#tmdbID').getAttribute('data-tmdb-id');
             let mutedIcon = $('.muted-icon');
-            // let unmutedIcon = $('.unmuted-icon');
+            let unmutedIcon = $('.unmuted-icon');
 
             let windowHeight = window.innerHeight;
             let windowWidth  = window.innerWidth;
@@ -157,43 +158,19 @@
                 windowHeight = window.innerHeight;
                 windowWidth  = window.innerWidth;
 
-                // if (windowWidth < 900 & windowWidth > 700) {
-                //     $('.movie-trailer').attr('style', 
-                //         "width: 2600px;height: 100%;left: -95%;top: 0%;"
-                //     );
-                // } else if (windowWidth < 700 && windowWidth < 900) {
-                //     $('.movie-trailer').attr('style', 
-                //         "width: 2600px;height: 100%;left: -125%%;top: 0%;"
-                //     );
                 if (windowWidth < 900) {
                     $('.movie-trailer').attr('style',
-                        "width: 2600px; height: 100%; left: 50%; top: 0%; transform: translateX(-50%);"
+                        "width: 2600px; height: 140%; left: 50%; top: -20%; transform: translateX(-50%); opacity: 0.55;"
                     );
                 } else if (windowWidth > 900) {
                     $('.movie-trailer').attr('style', 
-                        "width: 100%; height: 100%;"
+                        "width: 100%; height: 100%; opacity: 0.55;"
                     );
                 }
             }
 
             window.onresize = resize;
-            // if (windowWidth < 900 & windowWidth > 700) {
-            //     $('.movie-trailer').attr('style', 
-            //         "width: 2600px;height: 100%;left: -95%;top: 0%;"
-            //     );
-            // } else if (windowWidth < 700 && windowWidth < 900) {
-            //     $('.movie-trailer').attr('style', 
-            //         "width: 2600px;height: 100%;left: -125%%;top: 0%;"
-            //     );
-            if (windowWidth < 900) {
-                $('.movie-trailer').attr('style',
-                    "width: 2600px; height: 100%; left: 50%; top: 0%; transform: translateX(-50%);"
-                );
-            } else if (windowWidth > 900) {
-                $('.movie-trailer').attr('style', 
-                    "width: 100%; height: 100%;"
-                );
-            }
+            resize();
 
             function rgbToHsl(r, g, b) {
                 r /= 255, g /= 255, b /= 255;
@@ -424,12 +401,19 @@
             $('.close-movie-display').click(() => $('.movie-display-container').hide());
             $('.close-movie-bg').click(() => $('.movie-display-container').hide());
 
-            window.document.onclick = (() => {
-                if (player.isMuted()) {
-                    player.unMute();
-                }
-                window.document.onclick = (() => null);
-            })
+            mutedIcon.click(() => { 
+                console.log('mutedIcon clicked');
+                player.unMute(); 
+                mutedIcon.hide();
+                unmutedIcon.show();
+            });
+            unmutedIcon.click(() => { 
+                console.log('unmutedIcon clicked');
+                player.mute();
+                mutedIcon.show();
+                unmutedIcon.hide();
+            });
+
         </script>
     </body>
 </html>

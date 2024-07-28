@@ -49,7 +49,7 @@ function onPlayerReady(event) {
 function stopVideo() {
     player.stopVideo();
     $('.movie-backdrop').show();
-    $('.movie-trailer').hide();
+    $('.movie-trailer').remove();
 }
 
 let playMuted = false;
@@ -86,11 +86,18 @@ function playYouTubeTrailer(videoID, height, width, muted) {
 var done = false;
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
-        setTimeout(stopVideo, 6000);
+        stopVideo();
         $('.muted-icon').hide();
+        $('.umuted-icon').hide();
         done = true;
     } else if (event.data == YT.PlayerState.PLAYING) {
         $('.movie-backdrop').hide();
-        $('.muted-icon').show();
+        if (player.isMuted()) {
+            $('.muted-icon').show();
+            $('.unmuted-icon').hide();
+        } else {
+            $('.muted-icon').hide();
+            $('.unmuted-icon').show();
+        }
     }
 }
