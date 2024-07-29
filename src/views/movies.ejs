@@ -289,7 +289,7 @@
                     min > 0 && min < 10 
                         ? `${hour}:0${min}`
                         : `${hour}:${min}`
-             ) : `${hour}h`;
+                ) : `${hour}h`;
                 
                 let rating = document.querySelector('.rating');
                 rating.textContent = `${(data.vote_average * 10).toFixed(0)}%`;
@@ -412,6 +412,17 @@
                     $('.movie-display-container').show();
                 } else {
                     // use PotatoTorrents
+
+                    /*
+                     * Not a huge fan of Chrome making me remove sandbox attributes to play
+                     * an iframe. I have those attributes so that pop up ads don't display
+                     * to the user. This is temporary, removing the sandbox attribute.
+                     * 
+                     * I will be replacing this with potato torrents functionality to 
+                     * display videos. Movie streaming on chrome will work the same
+                     * that movie streaming via "Watch with Friends" will work. via webtorrents.
+                     */
+                    document.querySelector('.video-player-iframe').removeAttribute('sandbox');
                 }
             });
             $('.close-movie-display').click(() => $('.movie-display-container').hide());
