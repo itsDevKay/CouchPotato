@@ -65,7 +65,7 @@
             <svg class="hidden unmuted-icon cursor-pointer" fill="#f1f1f1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path fill-rule="evenodd" d="M11.553 3.064A.75.75 0 0112 3.75v16.5a.75.75 0 01-1.255.555L5.46 16H2.75A1.75 1.75 0 011 14.25v-4.5C1 8.784 1.784 8 2.75 8h2.71l5.285-4.805a.75.75 0 01.808-.13zM10.5 5.445l-4.245 3.86a.75.75 0 01-.505.195h-3a.25.25 0 00-.25.25v4.5c0 .138.112.25.25.25h3a.75.75 0 01.505.195l4.245 3.86V5.445z"/><path d="M18.718 4.222a.75.75 0 011.06 0c4.296 4.296 4.296 11.26 0 15.556a.75.75 0 01-1.06-1.06 9.5 9.5 0 000-13.436.75.75 0 010-1.06z"/><path d="M16.243 7.757a.75.75 0 10-1.061 1.061 4.5 4.5 0 010 6.364.75.75 0 001.06 1.06 6 6 0 000-8.485z"/></svg>
         </div>
         <div class="bg-slate-900 h-screen w-full fixed -z-20">
-            <div id="movie-trailer" class="movie-trailer fixed -z-20" style="width: 2600px;height: 100%;left: -95%;top: 0%;"></div>
+            <div id="movie-trailer" class="movie-trailer fixed -z-20" style="width: 2600px;height: 100%;left: -95%;top: 0%;opacity:0;"></div>
             <div class="movie-backdrop w-full h-full bg-cover bg-no-repeat bg-center opacity-45 fixed -z-10"></div>
 
             <div class="flex flex-col items-center w-full h-full pt-6 px-[1.5rem] md:px-10 justify-between lg:pt-7 lg:px-20">
@@ -347,55 +347,58 @@
                 });
 
                 if (trailer.error === undefined) {
-                    setTimeout(() => {
-                        console.log('playing trailer');
+                    // ignore trailers on mobile
+                    if (!navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
                         setTimeout(() => {
-                            if (isFirefox()) {
-                                // getAutoplayPolicy doesnt work on chrome || safari
-                                document.querySelector('.movie-trailer').style.height = 0;
-                                document.querySelector('.movie-trailer').style.width = 0;
-                                if (navigator.getAutoplayPolicy("mediaelement") === "allowed") {
-                                    // Do nothing. The content can autoplay.
-                                    console.log('autoplay is enabled.');
-                                    playYouTubeTrailer(
-                                        trailer.key, 
-                                        window.innerHeight > 900 ? $('.movie-trailer').height() : '2600px', 
-                                        $('.movie-trailer').width(),
-                                        window.screen.height,
-                                        window.screen.width,
-                                        false
-                                    );
-                                    resize();
-                                } else if (navigator.getAutoplayPolicy("mediaelement") === "allowed-muted") {
-                                    // Mute the video so it can autoplay.
-                                    console.log('autoplay-muted is enabled.');
+                            console.log('playing trailer');
+                            setTimeout(() => {
+                                if (isFirefox()) {
+                                    // getAutoplayPolicy doesnt work on chrome || safari
+                                    document.querySelector('.movie-trailer').style.height = 0;
+                                    document.querySelector('.movie-trailer').style.width = 0;
+                                    if (navigator.getAutoplayPolicy("mediaelement") === "allowed") {
+                                        // Do nothing. The content can autoplay.
+                                        console.log('autoplay is enabled.');
+                                        playYouTubeTrailer(
+                                            trailer.key, 
+                                            window.innerHeight > 900 ? $('.movie-trailer').height() : '2600px', 
+                                            $('.movie-trailer').width(),
+                                            window.screen.height,
+                                            window.screen.width,
+                                            false
+                                        );
+                                        resize();
+                                    } else if (navigator.getAutoplayPolicy("mediaelement") === "allowed-muted") {
+                                        // Mute the video so it can autoplay.
+                                        console.log('autoplay-muted is enabled.');
+                                        playYouTubeTrailer(
+                                            trailer.key, 
+                                            // $('.movie-trailer').height(), 
+                                            // $('.movie-trailer').width(),
+                                            window.screen.height,
+                                            window.screen.width,
+                                            true
+                                        );
+                                        resize();
+                                    } else {
+                                        console.log('autoplay is disabled.');
+                                        // Autoplay disallowed.
+                                        // Add a play button to the video element.
+                                    }
+                                } else {
                                     playYouTubeTrailer(
                                         trailer.key, 
                                         // $('.movie-trailer').height(), 
                                         // $('.movie-trailer').width(),
                                         window.screen.height,
                                         window.screen.width,
-                                        true
+                                        false
                                     );
                                     resize();
-                                } else {
-                                    console.log('autoplay is disabled.');
-                                    // Autoplay disallowed.
-                                    // Add a play button to the video element.
                                 }
-                            } else {
-                                playYouTubeTrailer(
-                                    trailer.key, 
-                                    // $('.movie-trailer').height(), 
-                                    // $('.movie-trailer').width(),
-                                    window.screen.height,
-                                    window.screen.width,
-                                    false
-                                );
-                                resize();
-                            }
-                        },1000);
-                    }, 5000);
+                            },1000);
+                        }, 5000);
+                    }
                 } else {
                     console.log('trailer.error is ' + trailer.error);
                 }
