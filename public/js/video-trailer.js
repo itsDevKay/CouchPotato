@@ -92,11 +92,13 @@ function onPlayerStateChange(event) {
         $('.umuted-icon').hide();
         done = true;
     } else if (event.data == YT.PlayerState.PLAYING) {
-        // $('.movie-backdrop').hide();
-        document.querySelector('.movie-backdrop').style.opacity = 0;
-        setTimeout(() => {
-            document.querySelector('.movie-trailer').style.opacity = 0.55;
-        }, 500);
+        if (player.playerInfo.currentTime > 0) {
+            document.querySelector('.movie-backdrop').style.opacity = 0;
+            setTimeout(() => {
+                document.querySelector('.movie-trailer').style.opacity = 0.55;
+                console.log('set opacity to 0.55');
+            }, 500);
+        }
 
         if (player.isMuted()) {
             $('.muted-icon').show();

@@ -57,6 +57,82 @@
                 -moz-transition: opacity .5s ease-in-out;
                 -webkit-transition: opacity .5s ease-in-out;
             }
+
+            /* https://loading.io/css/ */
+            .loader {
+                /* change color here */
+                color: #1c4c5b;
+            }
+            .loader,
+            .loader div {
+                box-sizing: border-box;
+            }
+            .loader {
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 50px;
+            }
+            .loader div {
+                position: absolute;
+                width: 4.5px;
+                height: 4.5px;
+                background: currentColor;
+                border-radius: 50%;
+                animation: loader 1.2s linear infinite;
+            }
+            .loader div:nth-child(1) {
+                animation-delay: 0s;
+                top: 36.8px;
+                left: 36.24px;
+            }
+            .loader div:nth-child(2) {
+                animation-delay: 0.1s;
+                top: 33.08px;
+                left: 48.296px;
+            }
+            .loader div:nth-child(3) {
+                animation-delay: 0.4s;
+                top: 9.304px;
+                left: 49.52px;
+            }
+            .loader div:nth-child(4) {
+                animation-delay: -0.4s;
+                top: 3.36px;
+                left: 36.8px;
+            }
+            .loader div:nth-child(5) {
+                animation-delay: -0.3s;
+                top: 9.304px;
+                left: 24.08px;
+            }
+            .loader div:nth-child(6) {
+                animation-delay: -0.1s;
+                top: 33.08px;
+                left: 24.304px;
+            }
+            .loader div:nth-child(7) {
+                animation-delay: -0.2s;
+                top: 21.8px;
+                left: 20.36px;
+            }
+            .loader div:nth-child(8) {
+                animation-delay: 0.2s;
+                top: 21.52px;
+                left: 54.304px;
+            }
+            @keyframes loader {
+                0%, 20%, 80%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.5);
+                }
+            }
+
+
+
+
         </style>
     </head>
     <body>
@@ -65,7 +141,7 @@
             <svg class="hidden unmuted-icon cursor-pointer" fill="#f1f1f1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path fill-rule="evenodd" d="M11.553 3.064A.75.75 0 0112 3.75v16.5a.75.75 0 01-1.255.555L5.46 16H2.75A1.75 1.75 0 011 14.25v-4.5C1 8.784 1.784 8 2.75 8h2.71l5.285-4.805a.75.75 0 01.808-.13zM10.5 5.445l-4.245 3.86a.75.75 0 01-.505.195h-3a.25.25 0 00-.25.25v4.5c0 .138.112.25.25.25h3a.75.75 0 01.505.195l4.245 3.86V5.445z"/><path d="M18.718 4.222a.75.75 0 011.06 0c4.296 4.296 4.296 11.26 0 15.556a.75.75 0 01-1.06-1.06 9.5 9.5 0 000-13.436.75.75 0 010-1.06z"/><path d="M16.243 7.757a.75.75 0 10-1.061 1.061 4.5 4.5 0 010 6.364.75.75 0 001.06 1.06 6 6 0 000-8.485z"/></svg>
         </div>
         <div class="bg-slate-900 h-screen w-full fixed -z-20">
-            <div id="movie-trailer" class="movie-trailer fixed -z-20" style="width: 2600px;height: 100%;left: -95%;top: 0%;opacity:0;"></div>
+            <div id="movie-trailer" class="movie-trailer fixed -z-20 opacity-0" style="width: 2600px;height: 100%;left: -95%;top: 0%;opacity:0;"></div>
             <div class="movie-backdrop w-full h-full bg-cover bg-no-repeat bg-center opacity-45 fixed -z-10"></div>
 
             <div class="flex flex-col items-center w-full h-full pt-6 px-[1.5rem] md:px-10 justify-between lg:pt-7 lg:px-20">
@@ -138,7 +214,7 @@
         </div>
 
         <div class="movie-display-container hidden w-full h-full fixed z-[90]">
-            <div class="bg-[#333] opacity-80 w-full h-full fixed z-[1000] close-movie-bg"></div>
+            <!-- <div class="bg-[#333] opacity-80 w-full h-full fixed z-[1000] close-movie-bg"></div> -->
             <svg class="close-movie-display fixed mt-10 mr-10 right-0 z-[1001]" style="cursor:pointer;" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 26 26" xml:space="preserve" height="40" width="40">
                 <g>
                     <path d="M21.125,0H4.875C2.182,0,0,2.182,0,4.875v16.25C0,23.818,2.182,26,4.875,26h16.25   C23.818,26,26,23.818,26,21.125V4.875C26,2.182,23.818,0,21.125,0z M18.78,17.394l-1.388,1.387c-0.254,0.255-0.67,0.255-0.924,0   L13,15.313L9.533,18.78c-0.255,0.255-0.67,0.255-0.925-0.002L7.22,17.394c-0.253-0.256-0.253-0.669,0-0.926l3.468-3.467   L7.221,9.534c-0.254-0.256-0.254-0.672,0-0.925l1.388-1.388c0.255-0.257,0.671-0.257,0.925,0L13,10.689l3.468-3.468   c0.255-0.257,0.671-0.257,0.924,0l1.388,1.386c0.254,0.255,0.254,0.671,0.001,0.927l-3.468,3.467l3.468,3.467   C19.033,16.725,19.033,17.138,18.78,17.394z" style="fill:#f1f1f1;"/>
@@ -149,7 +225,23 @@
                 <div class="iframe-container flex w-full h-full justify-center items-center">
                     <!-- <div class="video-player-background w-100% bg-black"> -->
                         <iframe class="video-player-iframe w-full h-full" src="https://vidsrc.to/embed/movie/<%= tmdbID %>" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen></iframe>
+                        <video controls class="video-player-video w-full h-full hidden"></video>
                     </div>
+                </div>
+            </div>
+            <div class="torrent-display py-[5px] hidden lg:py-5 lg:px-10 px-[15px] bg-[#333] border-[#d28c41] border-[4px] h-[80%] w-[80%] fixed left-1/2 right-1/2 top-1/2 bottom-1/2 -translate-x-1/2 -translate-y-1/2" style="box-shadow: 0 2px 15px 5px rgba(0,0,0,0.2);">
+                <div style="display:flex;justify-content: space-between;align-items: center;">
+                    <h2 class="asap-font-semibold text-lg" style="color: #f1f1f1;">PotatoTorrents</h2>
+                    <svg class="close-display" style="cursor:pointer;" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 26 26" xml:space="preserve" height="32" width="32">
+                        <g>
+                            <path d="M21.125,0H4.875C2.182,0,0,2.182,0,4.875v16.25C0,23.818,2.182,26,4.875,26h16.25   C23.818,26,26,23.818,26,21.125V4.875C26,2.182,23.818,0,21.125,0z M18.78,17.394l-1.388,1.387c-0.254,0.255-0.67,0.255-0.924,0   L13,15.313L9.533,18.78c-0.255,0.255-0.67,0.255-0.925-0.002L7.22,17.394c-0.253-0.256-0.253-0.669,0-0.926l3.468-3.467   L7.221,9.534c-0.254-0.256-0.254-0.672,0-0.925l1.388-1.388c0.255-0.257,0.671-0.257,0.925,0L13,10.689l3.468-3.468   c0.255-0.257,0.671-0.257,0.924,0l1.388,1.386c0.254,0.255,0.254,0.671,0.001,0.927l-3.468,3.467l3.468,3.467   C19.033,16.725,19.033,17.138,18.78,17.394z" style="fill:#f1f1f1;"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="results-container flex justify-center" style="overflow-y:scroll; height: 85%; overflow-x:hidden;">
+                    <!-- <div class="loader" style="display: none;"></div> -->
+                    <!-- <div class="loader"><div></div></div> -->
+                    <div class="loader" style="color: rgb(70, 140, 140);"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 </div>
             </div>
         </div>
@@ -157,6 +249,9 @@
         <script src="https://unpkg.com/color.js@1.2.0/dist/color.js"></script>
         <script src="https://www.youtube.com/iframe_api"></script>
         <script src="/js/video-trailer.js"></script>
+        <script>
+            let movieSrc, continueWatchingFrom;
+        </script>
         <script type="module">
             import tinycolor from "https://esm.sh/tinycolor2";
 
@@ -172,11 +267,11 @@
 
                 if (windowWidth < 900) {
                     $('.movie-trailer').attr('style',
-                        "width: 2600px; height: 140%; left: 50%; top: -20%; transform: translateX(-50%); opacity: 0.55;"
+                        "width: 2600px; height: 140%; left: 50%; top: -20%; transform: translateX(-50%);"
                     );
                 } else if (windowWidth > 900) {
                     $('.movie-trailer').attr('style', 
-                        "width: 100%; height: 100%; opacity: 0.55;"
+                        "width: 100%; height: 100%;"
                     );
                 }
             }
@@ -234,7 +329,7 @@
             }
 
 
-            let videoDetails, credits, videos, trailer;
+            let videoDetails, credits, videos, trailer, title;
 
             // fetch movie data
             fetch(`/api/movies/details/${tmdbID}`)
@@ -243,6 +338,7 @@
                 console.log(json);
                 let data = json.details;
                 videoDetails = data;
+                title = videoDetails.title;
                 credits = json.credits;
                 videos = json.videos.results;
                 try {
@@ -344,6 +440,9 @@
 
                     let wwfIcon = $('#wwf-icon');
                     wwfIcon.attr('fill', `rgba(${c[0]},${c[1]},${c[2]}`);
+
+                    let loader = document.querySelector('.loader');
+                    loader.style.color = `rgb(${c[0]},${c[1]},${c[2]}`;
                 });
 
                 if (trailer.error === undefined) {
@@ -414,22 +513,55 @@
                     document.querySelector('.movie-backdrop').style.opacity = 0.45;
                     $('.movie-display-container').show();
                 } else {
-                    // use PotatoTorrents
-
-                    /*
-                     * Not a huge fan of Chrome making me remove sandbox attributes to play
-                     * an iframe. I have those attributes so that pop up ads don't display
-                     * to the user. This is temporary, removing the sandbox attribute.
-                     * 
-                     * I will be replacing this with potato torrents functionality to 
-                     * display videos. Movie streaming on chrome will work the same
-                     * that movie streaming via "Watch with Friends" will work. via webtorrents.
-                     */
-                    document.querySelector('.video-player-iframe').removeAttribute('sandbox');
+                    if (movieSrc) {
+                        $('.movie-display-container').show();
+                        document.querySelector('video').play();
+                    } else {
+                        console.log('searching for potato torrents');
+                        document.querySelector('.results-container').classList.add('justify-center');
+                        document.querySelector('.results-container').classList.remove('flex-col');
+                        
+                        // use PotatoTorrents
+                        $('.torrent-display').show();
+                        $('.loader').show();
+                        fetch(
+                            '/api/searchtorrent/' + title
+                        )
+                        .then(r => r.json())
+                        .then(torrent => {
+                            console.log('creating torrent search results')
+                            $('.loader').hide();
+                            document.querySelector('.results-container').classList.remove('justify-center');
+                            document.querySelector('.results-container').classList.add('flex-col');
+                            for (let i=0; i < torrent.torrents.length; i++) {
+                                if (document.querySelector('.results-container').children.length == 0) {
+                                    for (let i=0; i < document.querySelector('.results-container').children.length; i++) {
+                                        document.querySelector('.results-container').children[i].remove();
+                                    }
+                                }
+                                createResultItem(
+                                    torrent.torrents[i].torrent.title, 
+                                    torrent.torrents[i].torrent.seeds,
+                                    torrent.torrents[i].magnet
+                                );
+                            }
+                        });
+                    }
                 }
             });
-            $('.close-movie-display').click(() => $('.movie-display-container').hide());
-            $('.close-movie-bg').click(() => $('.movie-display-container').hide());
+
+            function closeMovieDisplay() {
+                $('.video-player-video').trigger('pause');
+                console.log('paused video. or should have');
+                $('.movie-display-container').hide();
+            }
+
+            $('.close-movie-display').click(() => {
+                closeMovieDisplay();
+            });
+            $('.close-movie-bg').click(() => {
+                closeMovieDisplay();
+            });
 
             mutedIcon.click(() => { 
                 console.log('mutedIcon clicked');
@@ -444,6 +576,81 @@
                 unmutedIcon.hide();
             });
 
+            const createResultItem = (title, seeds, magnet) => {
+                // <div class="item" style="border-bottom: 1px solid #f1f1f1; height: 65px; width: 100%;">
+                let item = document.createElement('div');
+                    item.classList.add('item');
+                    item.style.borderBottom = '1px solid #f1f1f1';
+                    item.style.height = '65px';
+                    item.style.cursor = 'pointer';
+                    item.style.width = '100%';
+                    item.style.display = 'flex';
+                    item.style.justifyContent = 'space-between';
+                    item.style.alignItems = 'center';
+                    item.style.justifyContent = 'justify-between';
+                    item.style.color = '#f1f1f1';
+                    item.style.padding = '0 5px';
+                    item.setAttribute('data-magnet', magnet);
+                    item.onclick = (() => {
+                        window.infoHash = magnet.split('btih:')[1].split('&')[0];
+                        $.get('/api/add/' + infoHash, function(data) {
+                            var video = '/stream/' + infoHash + '.mp4';
+                            $('.video-player-video').attr('src', video);
+                            movieSrc = video;
+                            $('.input').hide();
+                            $('.video-player-iframe').remove();
+                            $('.video-player-video').show();
+                            $('.movie-display-container').show();
+                            document.querySelector('video').play();
+                            $('.torrent-display').hide();
+                        });
+                    });
+
+                let _title = document.createElement('p');
+                _title.textContent = title;
+                _title.style.width = '75%';
+                _title.style.overflowWrap = 'anywhere';
+                
+                let seedDiv = document.createElement('div');
+                seedDiv.style.color = '#f1f1f1';
+                seedDiv.style.display = 'flex';
+                seedDiv.style.alignItems = 'center';
+
+                let _seedCount = document.createElement('p');
+                _seedCount.textContent = `Seeds: ${seeds}`;
+                _seedCount.style.paddingRight = '5px';
+
+                let _seedIcon = document.createElement('div');
+
+                // if height and widht has to be changed otherwise you put them directly in svg_str
+                const h = 23 + 'px';
+                const w = 23 + 'px';
+                const fill = seeds >= 100 ? 'green' : (
+                    seeds < 50 ? 'red' : 'orange'
+                );
+                // if path is a variable otherwise you put directly in svg_str
+                const path_d = "M4,14H2V2H4ZM7,5H5v9H7Zm3,3H8v6h2Zm3,3H11v3h2Z";
+
+                let svg_str = '<svg xmlns="http://www.w3.org/2000/svg" fill="' + fill + '" width="' + w + '" height="' + h + '"><path d="' + path_d + '"/></svg>';
+                    
+                document.querySelector('.results-container').appendChild(item);
+
+                item.appendChild(_title);
+                item.appendChild(seedDiv);
+
+                seedDiv.appendChild(_seedCount);
+                seedDiv.appendChild(_seedIcon);
+
+                _seedIcon.innerHTML = svg_str;
+            }
         </script>
     </body>
 </html>
+
+
+
+
+
+<!-- document.querySelector('video').requestPictureInPicture()
+     document.querySelector('video').exitPictureInPicture()
+-->

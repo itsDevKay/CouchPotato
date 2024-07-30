@@ -166,7 +166,7 @@ const createResultItem = (title, seeds, magnet) => {
     // if path is a variable otherwise you put directly in svg_str
     const path_d = "M4,14H2V2H4ZM7,5H5v9H7Zm3,3H8v6h2Zm3,3H11v3h2Z";
 
-    svg_str = '<svg xmlns="http://www.w3.org/2000/svg" fill="' + fill + '" width="' + w + '" height="' + h + '"><path d="' + path_d + '"/></svg>';
+    let svg_str = '<svg xmlns="http://www.w3.org/2000/svg" fill="' + fill + '" width="' + w + '" height="' + h + '"><path d="' + path_d + '"/></svg>';
         
     document.querySelector('.results-container').appendChild(item);
 
